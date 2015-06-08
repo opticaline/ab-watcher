@@ -29,6 +29,7 @@ class Search:
 
     def search(self, t, keyword):
         pass
+        # covers, url, title, description, views, username
 
     def get(self, url):
         return self.ajax.get(url)
@@ -41,7 +42,21 @@ class AcFunSearch(Search):
             pass
         else:
             for url in self.source[t]:
-                result += json.loads(self.get(url))
+                result += self.translation(json.loads(self.get(url)))
+        return result
+
+    @staticmethod
+    def translation(data):
+        result = []
+        for d in data:
+            result.append({
+                'covers': d['titleImg'],
+                'url': d['url'],
+                'title': d['title'],
+                'description': d['description'],
+                'views': d['views'],
+                'username': d['username']
+            })
         return result
 
 
