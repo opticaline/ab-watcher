@@ -1,7 +1,34 @@
-import json
 from org.opticaline.ab.search.search import *
 
 __author__ = 'opticaline'
+
+
+class ArgsParser:
+    all_type = set()
+
+    def __init__(self, args, source):
+        self.args = args
+        for site in source:
+            for t in source[site]:
+                self.all_type.add(t)
+
+    def parser(self):
+        t, key, scope = None, None, None
+        if len(self.args) == 0:
+            t = 'hot'
+        elif len(self.args) == 1:
+            if self.args[0] in self.all_type:
+                t = self.args[0]
+            else:
+                t = 'search'
+                key = self.args[0]
+        elif len(self.args) == 2:
+            t = 'search'
+            scope = self.args[0]
+            key = self.args[1]
+        else:
+            pass
+        return t, key, scope
 
 
 class SearchManager:
@@ -20,9 +47,13 @@ class SearchManager:
             self.searcher.append(AcFunSearch(self.source['BiliBili']))
 
     def search(self, args):
-        return self.getdata(*args)
+        t, k, s = ArgsParser(args, self.source).parser()
+        if t is not None:
+            return self.get_data(t, {'keyword': k, 'scope': s} if k is not None else None)
+        else:
+            return []
 
-    def getdata(self, t, keyword=None):
+    def get_data(self, t, keyword=None):
         data = []
         for i in range(len(self.searcher)):
             data += self.searcher[i].search(t, keyword)

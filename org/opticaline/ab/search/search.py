@@ -1,6 +1,7 @@
 import json
 import urllib
 from urllib.request import Request
+import re
 
 __author__ = 'opticaline'
 
@@ -10,8 +11,8 @@ class Ajax:
 
     def __init__(self, use_proxy=True):
         if use_proxy:
-            proxyhand = urllib.request.ProxyHandler({"http": "http://zhang-xu-neu:Bronze3!@192.168.107.27:8080"})
-            self.opener = urllib.request.build_opener(proxyhand)
+            proxy_hand = urllib.request.ProxyHandler({"http": "http://zhang-xu-neu:Bronze3!@192.168.107.27:8080"})
+            self.opener = urllib.request.build_opener(proxy_hand)
         else:
             self.opener = urllib.request.build_opener()
 
@@ -38,12 +39,23 @@ class Search:
 class AcFunSearch(Search):
     def search(self, t, keyword):
         result = []
-        if keyword:
-            pass
-        else:
-            for url in self.source[t]:
+        for url in self.source[t]:
+            url = self.set_params(url, keyword)
+            if t == 'search':
+                result += self.translation(json.loads(self.get(url).replace('system.tv=', ''))['data']['page']['list'])
+            else:
                 result += self.translation(json.loads(self.get(url)))
         return result
+
+    @staticmethod
+    def set_params(url, keyword=None):
+        if not keyword:
+            keyword = {}
+
+        def repl(matched):
+            return keyword.get(matched.group("key"), '')
+
+        return re.sub('\{(?P<key>\w+)\}', repl, url)
 
     @staticmethod
     def translation(data):
@@ -51,7 +63,8 @@ class AcFunSearch(Search):
         for d in data:
             result.append({
                 'covers': d['titleImg'],
-                'url': d['url'],
+                'url': d['url'] or 'http://www.acfun.tv/' +
+                                   ('aa' if d['contentId'].startswith('aa') else 'av') + '/' + d['contentId'],
                 'title': d['title'],
                 'description': d['description'],
                 'views': d['views'],
