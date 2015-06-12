@@ -18,5 +18,8 @@ if __name__ == '__main__':
     if len(args) > 0:
         manager = SearchManager(options)
         array = manager.search(args)
+        #
         analysis = Analysis(info=array[0])
-        print(analysis.get_video())
+        video = analysis.get_video()
+        print(analysis.get_ass())
+

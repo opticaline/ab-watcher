@@ -2,23 +2,23 @@ __author__ = 'opticaline'
 import subprocess
 
 class MPlayer:
-    exec_path = 'D:\mplayer\mplayer'
+    exec_path = 'C:\Program Files\DAUM\PotPlayer\PotPlayerMini.exe'
     subtitle = None
 
     def stop(self):
         pass
 
     def play(self):
-        self.subtitle = 'D:\Test1.ass'
+        self.subtitle = 'D:\Test2.ass'
 
         command = self.exec_path
-        if self.subtitle is not None:
-            command += ' -sub ' + self.subtitle + ' -subcp utf-8'
-        command += ' D:\Test.wmv'
+        #if self.subtitle is not None:
+        #    command += ' -ass -sub ' + self.subtitle + ' -subcp utf-8'
+        #command += ' D:\Test.wmv'
         print(command)
-        p = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        p = subprocess.Popen([command, 'D:\Test.wmv'], shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         for line in p.stdout.readlines():
-            print(str(line))
+            print(line.decode('gbk'))
         retval = p.wait()
         print(retval)
 
