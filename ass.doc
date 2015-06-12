@@ -1,0 +1,464 @@
+看到一篇好文章，介绍ASS字幕的。写的很专业、很透彻，转载下来，共勉。
+
+ssa/ass字幕格式全解析
+
+　　　　　内容:
+　　　　　　一. 概述
+　　　　　　二. 文件各个部分解析
+　　　　　　三. 各种类型的行
+　　　　　　四. [Script Info]部分的标题行
+　　　　　　五. [v4+ Styles]部分的风格行Style
+　　　　　　六. [Events]事件部分的对话行Dialogue
+　　　　　　七. [Events]事件部分的注解行Comment
+　　　　　　八. [Events]事件部分的图片行Picture
+　　　　　　九. [Events]事件部分的声音行Sound
+　　　　　　十. [Events]事件部分的影片行Movie
+　　　　　　十一. [Events]事件部分的命令行Command
+　　　　　　附A. 风格覆盖代码(Tags, Codes)
+　　　　　　附B. 内嵌的字体/图片编码
+
+注:
+1) 此文档是对原SSA文件规格英文文档进行翻译和补充而成, 原文件可从以下链接获得:
+　http://www.perlfu.co.uk/projects/asa/ass-specs.doc
+　另外参考了以下资料:
+　http://aegisub.cellosoft.com/docs/ASS_Tags
+　http://en.wikipedia.org/wiki/SubStation_Alpha
+2) 表述编写格式时, 用到的符号说明如下:
+　　<..>    参数
+　　[..]      可选项
+3) 除附A以外, 用红色字体标明ASS相对于SSA格式的新增功能或者改动
+4) 用蓝色, 加粗, 下划线等符号表明需要注意的地方.
+
+
+一. 概述
+
+SSA全称SubStation Alpha, 是由CS Low(又称Kotus)创建的一种字幕格式, 用以实现比传统字幕诸如srt等格式更为复杂的功能. SSA目前的版本为v4.00. SSA同时也是一款软件的名称, 专用于创建和编辑SSA格式的字幕.
+ASS是一种比SSA更为高级的字幕格式, 全称Advanced SubStation Alpha, 实质是SSA v4.00+ 版本. 它拥有比SSA更多的功能.
+
+1. SSA v4.00与之前的SSA版本格式不同. v4可以阅读和加载以前版本的格式, 但之前版本不支持v4以上的编写格式. 换句话说, SSA从v4版本开始可以阅读它认识的命令而忽略不认识的命令, 从而可以向下兼容, 也可以向上兼容.
+2. 文件为普通的DOS文本格式. 也就是说它可以用记事本打开编辑, 同时需要注意编写出错时有可能导致无法预料的结果.
+3. 文件编写时所划分的各部分, 从形式上来说类似于ini文件, 但它并非真正的ini文件
+4. 各部分中的绝大多行都以一说明性的文字加上冒号来开头, 指明该行包含哪一些信息.
+5. 每一行中的信息都以逗号分隔. 因此风格名和人物角色名中要求不能出现逗号.
+6. 事件部分([Events])里的各行可以不分先后. 也就是说人物对白行可以不按时间顺序排列
+7. 不正确的行会被忽略. 同时会给出警告指出被忽略的行数
+8. 一行里包含了完整的信息, 必须在一行内写完, 不能分成多行
+9. 当文件中引用了一个未知的风格名(style)时, 加载时会用默认的风格来替代(Default)
+10. 当一个风格(Style)中引用了系统中没有安装的字体, 则会用Arial字体来代替.
+
+二. 文件各部分解析
+
+[Script Info]
+这一部分包含了文件内容的标题和总体信息. [Script Info]这一行必须是v4版本文件的第一行
+
+[v4 Styles]
+字幕正文使用的风格都在这一部分做出相关定义. 注: ASS使用的是[v4+ Styles]
+
+[Events]
+这部分包含所有的事件, 有字幕, 评论, 图片, 声音, 影片和命令. 基本上屏幕中出现的所有内容都集中在这一部分.
+
+[Fonts]
+如果想把字体内嵌入字幕文件, 那么字体文件须采用数字编码后放在这一部分. 只有truetyle字体才能内嵌入SSA/ASS文件
+每一个内嵌字体文件以一行开头, 格式如下:
+fontname: <文件名>
+开头的”fontname”必须全部用小写, 如果大写会让ASS文件视其为文件编码的一部分.
+<文件名>是SSA文件保存字体时使用的文件名, 命名规则如下:
+truetype字体原来的字体名称
+加一条下划线
+如果是粗体则加一个”B”
+如果是斜休则加一个”I”
+加一个数字表明字体编码(字符集)
+最后加上”.ttf”
+例如:
+fontname: comic_B0.ttf
+
+在这一行之后是一些可打印的字符组成的行, 代表组成这个字体的二进制字符, 除了最后一行可能短些, 其余每行有80个字符.
+从二进制转换到字符用的是UUE-encoding的编码方式, 编码的详细信息参见附B
+
+[Graphics]
+如果选择内嵌图片, 那这一部分就包含了所有用到的数字编码格式的图片文件. 开头一行的格式如下:
+filename: <文件名>
+开头的”filename”必须为小写, 如果大写会被认为是文件编码的一部分.
+<文件名>是SSA文件保存图片时使用的文件名, 它与[Events]事件部分中提及的图片名称一致.
+
+SSA会把文件中找到的任何文件保存到SSA的程序目录中的”Pictures”子目录中.  例如: c:\program files\Sub Station Alpha v4.00\Pictures. SSA会先从文件本身中寻找这些编码好的文件, 但当没有找到时会去”Pictures”这个子目录里去找.
+
+注: 现在的SSA文件已经很少包含”[Pictures]” 或者 “[Fonts]” 这两个部分. 因为这些功能只被Sub Station Alpha这一个程序所支持. 而其它的filter (Vobsub/Vsfilter/Avery Lee Subtitler filter) 都不支持.
+
+三. 各种类型的行
+
+在这一节里简要地说明在每个部分中出现的所有行的类型和大致功能, 各自具体说明参见后面的章节.
+
+;　　　　　　　　   只在编写中请说明作用的行, 加载字幕时不可见.
+Title:　　　　　　    标题, 是对字幕的描述
+Original Script:　　  最初创建字幕的人
+Original Translation: (可选) 最初翻译对话的人
+Original Editing:　　(可选) 最初的编辑者, 一般是所有参与翻译和校对等工作的人
+Original Timing:　　(可选) 最初的时间轴人员
+Synch Point:　　　  (可选) 指出从哪一个时间点开始进行字幕加载播放
+Script Updated By:   (可选) 对原字幕对话进行编辑更新的人
+Update Details:　　 进行了哪些更新等具体信息
+ScriptType:　　　　对SSA/ASS文件的版本做说明, 例如”v4.00″. ASS的版本为”v4.00+”
+Collisions:　　　　  当两条字幕重叠时, 如何进行相对移动
+PlayResY:    　　　 文件所使用的视频高度参考标准
+PlayResX:　　　　 文件所使用的视频宽度参考标准
+PlayDepth:　　　　加载字幕时所使用的颜色深度
+Timer:　　　　　　对字幕加载的速度调整, 数值为百分数. 例如”100.0000″代表100%.
+ScaledBorderAndShadow: 边框宽度与阴影深度是否随着视频分辨率同等比例缩放.
+Style:　　　　　　  定义每条字幕所使用的风格
+Dialogue:　　　　   指明为对话事件, 即屏幕上出现的字幕
+Comment:　　　　  指明此行是评论/解释事件, 它与Dialogue, Picture, Sound, Movie或者Command事件包含相同的信息, 以此来进行解释说明, 但加载字幕时不会出现在屏幕
+Picture:　　　　　   指明为图片事件, 即显示.bmp, .jpg, .gif, .ico 或者 .wmf 格式的图片(注意不支持png, 且filter不支持加载图片)
+Sound:　　　　　　指明为声音事件, 即播放.wav格式的声音(filter不支持)
+Movie:　　　　　　 指明为电影事件, 即加载avi视频(filter不支持)
+Command:　　　　 指明为命令事件, 即可在后台打开某个程序
+
+四. [Script Info]部分的标题行
+
+;　　　　　　　　　分号, 后面可以跟任何内容. 这一行是说明性文字, 加载字幕时不显示
+　　　　　　　　　注意此类型行必须要把分号放最前. 老版本不是用分号而是用!:
+Title:　　　　　　　标题, 如果没有提供, 则自动使用<untitled>
+Original Script:　　   剧本的最初作者, 若没有提供则自动使用<unknown>
+Original Translation:  (可选)原剧本的翻译者, 若没有提供则该行不显示
+Original Editing:　　 (可选)原剧本的编者和校对, 若没有提供则该行不显示
+Original Timing:　　  (可选)原剧本的时间轴人员, 若没有提供则该行不显示
+Synch Point:　　　　(可选)从哪个时间点开始加载字幕, 若没有提供则该行不显示
+Script Updated By:　 (可选)对原剧本的修改/更新人员, 若没有提供则该行不显示
+Update Details:　　  更新的具体信息, 若没有提供则该行不显示
+Script Type:　　　　SSA的版本信息, ASS的版本为”v4.00+”
+Collisions:　　　　  当字幕时间重叠时, 前后字幕的堆叠方式.
+　　　　　　　　　值为”Normal”时, 后一条字幕出现在前一条字幕的上方.
+　　　　　　　　　如果值为”Reverse”时, 前一条字幕往上移动给后一条字幕让位.
+PlayResY:    　　　　  文件所使用的视频高度参考标准, 如果使用Directdraw回放SSA v4会自动选择最相近的启用的设置
+PlayResX:　　　　  文件所使用的视频宽度参考标准, 如果使用Directdraw回放SSA v4会自动选择最相近的启用的设置.
+　　　　　　　　　如果只提供了PlayResX, PlayResY其中一种, 那另一种会按实际视频的像素值为准.
+　　　　　　　　　提供的分辨率数值影响以下参数:
+　　　　　　　　　1) 所有给出的坐标(到边缘的距离, \pos, \move, 矢量绘图等)都以此分辨率作为参照.
+　　　　　　　　　2) 所有的文字字号均按照此分辨率等比例放大缩小
+　　　　　　　　　3) 当ScaledBorderAndShadow被启用时, 所有边框宽度和阴影深度都按照此分辨率与实际分辨率的比例等比例缩放
+　　　　　　　　　4) 这个分辨率不影响最终显示文字的宽高比, 但影响矢量绘画图形的宽高比.
+PlayDepth:　　　　 加载字幕时使用的色深(颜色的数目), 如果使用Directdraw回放SSA v4会自动选择最相近的启用的设置
+Timer:　　　　　　 字幕加载的速度调整, 数值为百分数. 例如”100.0000″代表100%. 其数值有4位小数点.
+　　　　　　　　　它相当于对ASS字幕的时间速度进行乘法运算.
+　　　　　　　　　当速度大于100%时, 总时间会缩短, 而相应的字幕会越来越靠前.
+　　　　　　　　　当速度小于100%时, 总时间会延长, 而相应的字幕会越来越靠后.
+WrapStyle:　　　　 定义默认的换行方式, 
+　　　　　　　　　0: 智能换行, 行分得较平均, 上面的行较长
+　　　　　　　　　1: 一行结束后从行尾的词分行
+　　　　　　　　　2: 不换行. 此模式下只有\n, \N才换行
+　　　　　　　　　3: 与模式0相同, 但下面的行分得比较长
+ScaledBorderAndShadow: 指定边框宽度与阴影深度是否随着视频分辨率等比例缩放. 可为Yes, No. 默认为No.
+　　　　　　　　　当取值为No时, 边框宽度与阴影深度完全按照指定的像素数显示.
+　　　　　　　　　当取值为Yes时, 边框宽度与阴影深度随着实际视频的分辨率同等比例缩放.
+
+五. [v4+ Styles]部分的风格行Style
+
+Style定义了字幕的样式和位置. 所有的Style都在单独的Style里进行定义.
+除了阴影/边框的类型和深度, 其余所有的风格设置都可以由字幕文本中的覆写代码所替代.
+在定义风格之前先要有一行”Format:”来定义风格中每一个字段所代表的含义, 这些字段名称必须拼写准确, 顺序可以打乱, 字段名表示如下:
+
+Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, TertiaryColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, AlphaLevel, Encoding
+
+字段1:  Name. 风格(Style)的名称. 区分大小写. 不能包含逗号.
+字段2:  Fontname. 使用的字体名称, 区分大小写.
+字段3:  Fontsize. 字体的字号
+字段4:  PrimaryColour. 设置主要颜色, 为蓝-绿-红三色的十六进制代码相排列, BBGGRR. 为字幕填充颜色
+字段5:  SecondaryColour. 设置次要颜色, 为蓝-绿-红三色的十六进制代码相排列, BBGGRR. 在卡拉OK效果中由次要颜色变为主要颜色.
+字段6:  TertiaryColour(ASS中的名称为OutlineColor), 设置轮廓颜色, 为蓝-绿-红三色的十六进制代码相排列, BBGGRR.
+字段7:  BackColour, 设置阴影颜色, 为蓝-绿-红三色的十六进制代码相排列, BBGGRR.
+字段4-7: ASS的这些字段还包含了alpha通道信息. (AABBGGRR), 注ASS的颜色代码要在前面加上&H
+字段8:  Bold. -1为粗体, 0为常规
+字段9:  Italic. -1为斜体, 0为常规
+字段9.1:  Underline. [-1 或者 0] 下划线
+字段9.2:  Strikeout. [-1 或者 0] 中划线/删除线
+字段9.3:  ScaleX. 修改文字的宽度. 为百分数
+字段9.4:  ScaleY. 修改文字的高度. 为百分数
+字段9.5:  Spacing. 文字间的额外间隙. 为像素数
+字段9.6:  Angle. 按Z轴进行旋转的度数, 原点由alignment进行了定义. 可以为小数
+字段10:   BorderStyle. 1=边框+阴影, 3=纯色背景. 当值为3时, 文字下方为轮廓颜色的背景, 最下方为阴影颜色背景.
+字段11:   Outline. 当BorderStyle为1时, 该值定义文字轮廓宽度, 为像素数, 常见有0, 1, 2, 3, 4.
+字段12:   Shadow. 当BorderStyle为1时, 该值定义阴影的深度, 为像素数, 常见有0, 1, 2, 3, 4.
+字段13:   Alignment. 定义字幕的位置. 字幕在下方时, 1=左对齐, 2=居中, 3=右对齐. 1, 2, 3加上4后字幕出现在屏幕上方. 1, 2, 3加上8后字幕出现在屏幕中间. 例: 11=屏幕中间右对齐.
+字段13:   Alignment. 对于ASS字幕而言, 字幕的位置与小键盘数字对应的位置相同.
+字段14:   MarginL. 字幕可出现区域与左边缘的距离, 为像素数
+字段15:   MarginR. 字幕可出现区域与右边缘的距离, 为像素数
+字段16:   MarginV. 垂直距离
+　　　   对于处在下方的字幕, 此值是字幕到底端的像素数
+　　　   对于处在屏幕上方的字幕, 此值为字幕到顶端的像素数.
+　　　   对于处在屏幕中间的字幕, 此值被忽略.
+字段17:   AlphaLevel. SSA字幕用来定义透明度
+字段17:   AAS没有该字段.
+字段18:   Encoding. 指明字体的字符集或编码方式. 如0为英文, 134为简体中文, 136为繁体中文. 当文件为非UNICODE类型编码时, 该值对字幕的显示起作用.
+
+六. [Events]部分的对话行Dialogue
+
+Dialogue类型的行(对话行)包括字幕对白, 时间轴信息, 以及对白的显示方式.
+在对话行出现前必须有一条格式行Format: 来对逗号分隔的每个字段进行定义, 该格式行中的每一个字段必须拼写准确, 内容如下:
+
+Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+
+最后的一个字段永远都是对白文字的字段, 因此可以包含逗号. 前面的字段顺序可以改变.
+
+字段1:  Marked. 值为0表示该行为”未标识”行, 值为1表示该行为”标识”行
+字段1:  Layer. ASS的这个字段名是Layer(图层), 可以为任意的整数. 图层不同的两条位置/时间有重叠的字幕不被视为有冲突, 图层号码大的字幕显示在图层号小的上方.
+字段2:  Start. 事件开始的时间, 格式为0:00:00:00(时:分:秒:百分数), 注意小时只有一位数
+字段3:  End. 事件结束的时间. 格式为0:00:00:00(时:分:秒:百分数), 注意小时只有一位数
+字段4:  Style. 该条字幕所使用的风格. 风格的具体信息在[V4+ Style]这一部分中进行定义
+字段5:  Name. 角色名, 指出对白是由影片中哪位演员所说的. 字幕加载时不显示, 只为了编写时理解方便.
+字段6:  MarginL. 使用新的与左边缘的距离, 为4位数字代表的像素值. 0000代表使用当前Style定义的值.
+字段7:  MarginR. 使用新的与右边缘的距离, 为4位数字代表的像素值. 0000代表使用当前Style定义的值.
+字段8:  MarginV. 使用新的垂直距离, 为4位数字代表的像素值. 0000代表使用当前Style定义的值. 具体说明参见上面[v4+ Style]里的说明
+字段9:  Effect. 过渡效果. 可以为空值, 或者为三种过渡效果之一.
+　　　 效果名称区分大小写, 必须拼写准确. 且不加任何引号:
+　　　 “Karaoke” 是卡拉OK效果, 每个字依次高亮显示.  注: 在ASS中该效果已经废弃不用.
+　　　 “Scroll up;y1;y2;delay[;fadeawayheight]” 滚动效果, 指文字/图片向上滚动. 各参数以分号分隔.
+　　　 　　　 y1与y2是屏幕垂直区域的像素值, 位置可以互换. 当这两个值都为0时则全屏幕内滚动
+　　　 　　　 delay可取值1-100, 代表滚动速度的降低值. 当其为0时滚动速度最快.
+　　　 “Banner;delay”横幅效果. 所有文字被合并到单行, 并从右至左横向移动.
+　　　 　　　 delay的值可由1到100, 代表横幅移动速度的降低值. 当其为0时移动速度最快.
+　　　 “Scroll down;y1;y2;delay[;fadeawayheight]” 向下滚动
+　　　 “Banner;delay[;lefttoright;fadeawaywidth]”
+　　　 注意红字为ASS新增功能.
+　　　 lefttoright可取值0或1, 为可选, 默认为0(右出左进)
+　　　 当delay值大于0时, 移动速度为(1000/delay)像素每秒
+　　　 (注意: Avery Lee的字幕插件阅读滚动效果的顺序为: delay;y1;y2)
+　　　 fadeawayheight以及fadeawaywidth可令效果边缘的像素呈现透明.
+字段10: Text. 为对白字幕区域, 是最终出现在屏幕上的字幕. 任何位于第9个逗号后的内容均被看作是对白字幕, 所以本身可以包含逗号.
+　　　 在这一个字段中可以包含\n, \N, \h这三种分行/空格代码, 以及其它在大括号{ }内的风格覆写控制代码. 详情参看附A.
+
+
+
+七. [Events]事件部分的注解行Comment
+
+在[Events]这一部分内, 以Comment: 开头的行. 它可以与其它类型的事件行包含一样的信息, 但不会被作为字幕加载到屏幕上. 它起评论/说明的作用.
+
+八. [Events]事件部分的图片行Picture
+
+在[Events]这一部分内, 以Picture: 开头的行. 它与Dialogue行包含一样的控制信息, 但是在字段10的位置指定要显示的图片完整路径与图片名称. 在前面字段指定的风格被忽略, 滚动效果可以运用到图片事件上. MarginL和MarginV被用来指定图片与左边缘与下边缘的像素距离. 当MarginL为0000时图片水平居中显示. 当MarginV为0000时, 图片垂直居中.
+
+支持的图片格式有.bmp, .jpg, .gif, .ico 以及.wmf 格式的图片(不支持png) 注意, 只有SSA软件能支持加载图片事件, filter则不支持.
+
+九. [Events]事件部分的声音行Sound
+
+在[Events]这一部分内, 以Sound: 开头的行. 它与Dialogue行包含一样的控制信息, 但是在字段10的位置指定要加载的声音文件完整路径与名称, 格式为.wav. 风格与距离等值被忽略, 而且结束的时间值也被忽略. 该声音会播放到它结束, 或者播放到新的声音行加入为止.
+注: 各filter不支持加载声音行
+
+十. [Events]事件部分的影片行Movie
+
+在[Events]这一部分内, 以Movie: 开头的行. 它与Dialogue行包含一样的控制信息, 但是在字段10的位置指定要加载的视频文件完整路径与名称, 格式为.avi. 风格与效果等值被忽略
+
+结束的时间值(End)指出影片画面消失的时间, 但如果avi文件仍然没有结束, 则其声音仍然会持续播放.
+
+MarginL和MarginV被用来指定影片与左边缘, 上边缘的像素距离(与图片行不同). 当MarginL为0000时视频水平居中显示. 当MarginV为0000时, 视频垂直居中.
+
+注: Filter不支持加载影片行
+当Movie与Sound行有时间重叠时, 实际听到的声音以先开始的内容为准.
+
+十一. [Events]事件部分的命令行Command
+
+在[Events]这一部分内, 以Command: 开头的行. 它与Dialogue行包含一样的控制信息, 但是在字段10的位置指定要运行的程序完整路径与名称.
+风格, 距离, 效果, 结束时间都被忽略. 程序会运行到它结束为止, 或者运行到手动关掉为止.  注: Filter不支持加载命令行.
+
+SSA软件内置的一些命令可以出现在SSA文件内. 因完全用不到故将英文原文引用如下:
+There are also internal SSA commands which can appear in SSA scripts – the “SSA:Pause”, “SSA:Wait for trigger” command events, and genlock control commands. These all begin with “SSA:”
+The SSA:Pause command has the same effect as pressing “P” during script playback. It is useful as a second “synch point” to resume subtitling after switching sides of a laserdisk.
+The “SSA:Wait for audio trigger” command has the same effect as pressing “P” during script playback, but pausing is automatically cancelled if the audio input to the computer exceeds a specified “trigger” level. It is useful as a second “synch point” to resume subtitling after switching sides of a laserdisk. The audio triggering can be overridden to resume playback – by pressing “P”.
+Audio triggering “times out” after 10 minutes – If no audio peak of sufficient magnitude is received, and “P” is not pressed within 10 minutes – then playback will resume anyway.
+
+附A. 风格覆盖代码(Tags, Codes)
+
+风格覆写控制代码专用于[Events]这一部分的最后一个字段中, 对于文字/图片风格的重新定义.
+
+除了\n, \N, \h这三个代码之外, 其余所有代码都必须放在大括号{ }之内
+所有覆写代码都以反斜线开头\
+多个代码可以放在一个{ }内
+
+所有覆写代码作用于其后的所有文字. 如果只想作用于选定的文字, 则需要在选定文字的后面加一个”取消”作用的代码. 但也有少数代码会自动应用于整行文字, 如设定位置的代码.
+
+下面将所有代码分成一般, 绘图两组来详细解释:
+
+(一) 一般的代码
+
+\n　　　　　　　　　软性分行(回车), 只在分行模式(WrapStyle)为2时有效. 在其它分行模式下相当于一个空格
+\N　　　　　　　　　硬性分行(回车), 在任何分行模式下都有效
+\h　　　　　　　　　硬性空格. 它保证显示字幕时不会在它的这个空格上分行(保证左右两个词在同一行)
+\b<0 或 1>　　　　　 \b1令文字变为粗体. \b0强制文字不是粗体(bold)
+　　　　　　　　　   当参数大于1时, 会被作为字体的重量值. (注: 大多字体只有量化到2级或3级的粗度, 所以很少用到这个重量值)
+　　　　　　　　　   字体重量值为100的倍数, 如100为最细, 400为普通, 700为粗体, 900为最粗
+\i<0 或 1>　　　　　   \i1令文字变为斜体. \i0强制文字不是斜体(italic)
+\u<0 或 1>　　　　　  下划线(underline)开关
+\s<0 或 1>　　　　　  中划线(删除线)开关(strikeout)
+\bord<宽度>　　　　  指定边框宽度(border), 像素数. 可以为小数
+\shad<深度>　　　　  指定阴影深度(shadow), 不能为负数
+\be<0 或 1>　　　　　模糊边缘blur edges
+\fn<字体名称>　　　　指定使用系统中已安装的字体, 区分大小写. 如果使用的字体没有安装, 则会用Arial来替代(font name).
+　　　　　　　　　   注字体名与fn间不能有空格, 也没有其它的括号等
+\fs<字号>　　　　　　指定文字的大小, <字号>是一个指代高度的像素值, 只能用整数. (font size)
+\fsc<x 或 y><百分数>　缩放文字大小. <x 或 y>指定文字是横向还是纵向缩放. <百分数>指定调整到百分之多少. 同样适用于矢量图形.
+\fsp<像素值>　　　　  文字间增加额外的间隔(font spacing), 默认为0
+\fr[<x/y/z>]<度数>　　   文字旋转一定的度数(font rotation)　　　　　　　
+　　　　　　　　　   <x/y/z>表明文字沿着三维空间中哪个坐标轴旋转.
+　　　　　　　　　   原点由\org代码来指定, 否则由默认的定位点来决定(参见\pos的说明)
+　　　　　　　　　   \fr 默认代表\frz. <度数>可以为负值, 可以大于360. 此命令同样适用于矢量图形.
+\fe<字符集>　　　　　指定文字的编码(font encoding). 例如0为英文, 134为简体中文, 136为繁体中文. 1为系统默认.
+　　　　　　　　　   注: 当ASS/SSA文件本身的编码为非Unicode编码时, 这个数值总影响到按哪种代码页来显示字幕.
+　　　　　　　　　   推荐保存ASS/SSA文件时选择Unicode方式的编码, 例如UTF-8. 这样可以忽略这个值的设置
+\c&H<bbggrr>&　　　 指定文字的颜色(color). <bbggrr>是一个十六进制的RGB数值, 但颜色顺序相反(蓝-绿-红).
+　　　　　　　　　   <bbggrr>排在最前的00可以忽略不写, 例如{\c&HFF&}={\c&H0000FF&}, 为纯红色
+　　　　　　　　　   \1c&Hbbggrr&, \2c&Hbbggrr&, \3c&Hbbggrr&, \4c&Hbbggrr&分别设定主要, 次要, 边框, 阴影颜色
+　　　　　　　　　   \c 相当于\1c, 为字体本身填充颜色
+\alpha&H<aa>&　　　设定文字的透明度(alpha). <aa>是一个十六进制数值. 00为全见, FF为全透明
+　　　　　　　　　   \1a&Haa&, \2a&Haa&, \3a&Haa&, \4a&Haa&分别设定主要, 次要, 边框, 阴影颜色的透明度
+　　　　　　　　　   \alpha一次性调整文字所有元素的透明度
+\a<位置>　　　　　　<位置>是一个数字代码, 用来代表字幕出现在屏幕中的位置(alignment)
+　　　　　　　　　   1, 2, 3代表出现在画面底端的字幕, 分别为左对齐, 居中, 右对齐
+　　　　　　　　　   5, 6, 7代表出现在画面顶端的字幕, 分别为左对齐, 居中, 右对齐(在1,2,3基础上加了4)
+　　　　　　　　　   9, 10, 11代表出现在画面中间的字幕, 分别为左对齐, 居中, 右对齐(在1,2,3基础上加了8)
+　　　　　　　　　   当一行出现多个\a代码时, 只有最前面的一个有效
+\an<位置>　　　　　  <位置>为一数字代码, 代表字幕的位置, 从1到9, 与小键盘的数字键代表的位置一致　　　　
+　　　　　　　　　   当一行出现多个\an代码时, 只有最前面的一个有效
+　　　　　　　　　   注: 一般情况下\a, \an设置字幕位置, 但当有\pos, \move等代码时, \a和\an设置的是文字的定位点.
+\k<时间长度>　　　　卡拉OK效果, 高亮之前文字使用次要颜色, 高亮后使用主要颜色
+　　　　　　　　　   <时间长度>代表在下一小段出现高亮效果之前的当前段高亮停留时间, 值为百分之一秒的倍数
+　　　　　　　　　   \k<时间长度>按照每一分隔好的小段来进行高亮显示
+　　　　　　　　　   \kf 或者\K<时间长度>是从左至右的流畅填充高亮
+　　　　　　　　　   \ko<时间长度>, 与\k相似, 但在高亮之前文字边框也被去掉, 高亮后才显示边框
+\q<方式>　　　　　　定义分行方式, 即WrapStyle　　　　
+　　　　　　　　　   值为0: 智能分行, 大致平均分行, 不能完全平均时上面的行较长.
+　　　　　　　　　   值为1: 行尾分行, 尽管排满一整行后, 再分到下一行
+　　　　　　　　　   值为2: 不分行, 超出长度的行会排到屏幕以外. 这种方式下, \n和\N都可以强制分行
+　　　　　　　　　   值为3: 智能分行, 与方式0相似, 但下面的行比较长
+\r[<风格>]　　　　　　取消一行中之前的所有覆写代码效果, 包括动态特效. (restore/reset)　　　　
+　　　　　　　　　   <风格>令其恢复到指定的风格, 如果没有指定<风格>则恢复到这一行的默认风格
+\t([<时值1>, <时值2>, ] [<加速度>,] <风格代码>)
+　　　　　　　　　   提供从一种风格转到另一种风格的逐渐变化的动态效果. 只有部分风格代码可以用\t 进行动态变换:
+　　　　　　　　　   　　   字体　　几何形　　其它
+　　   　　　　　　　　　   \fs　　　 \fscx　　　\bord
+　　   　　　　　　　　　   \fsp　　   \fscy　　　\shad
+　　   　　　　　　　　　   \c　　　  \frx　　　   \clip
+　　　　　   　　　　　　   \1c　　　\fry
+　　　　　　　　   　　　   \2c　　　\frz
+　　　　　　　　　 　　     \3c　　　\fr
+　　   　　　　　　　　　   \4c
+　　　　　   　　　　　　   \alpha
+　　　　　　　　   　　　   \1a
+　　　　　　　　　 　　     \2a
+　　   　　　　　　　　　   \3a
+　　　　　   　　　　　　   \4a
+　　　　　　　　　   注: 对于 \clip, 只有矩形可以呈动态效果, 矢量绘画图形无法呈动态
+　　　　　　　　　   <时值1>与<时值2>是从该行开始显示后计算的毫秒数, 两时值间的时间间隔就是动态效果的运行时间(两时值无先后之分).
+　　　　　　　　　   这两个时候没有指定时相当于<时值1> = <时值2> = 0. 这时动态效果在整行的时间内运行
+　　　　　　　　　   <加速度>没有指定时相当于1, 此时匀速变化. <加速度>在0和1之间时速度由快变慢, 大于1时由慢变快.
+　　　　　　　　　   在<时值1>之前, 显示内容是{\t}代码之前的风格, <时值2>以后是<风格代码>所指定的风格.
+\pos(<x>, <y>)　　　   设置该行显示的位置, x,y为定位点的坐标值, 屏幕可见区的坐标为正值. 原点(0,0)在左上角落
+　　　　　　　　　   对于不同屏幕排列的字幕, 定位点的相对位置不同.
+　　　　　　　　　   \an1的定位点在字幕左下角, \an2的定位点在字幕正中下方, \an3的定位点在字幕右下角
+　　　　　　　　　   \an4的定位点在字幕正中左端, \an5的定位点在字幕正中, \an6的定位点在字幕正中最右端
+　　　　　　　　　   \an7的定位点在字幕左上角, \an8的定位点在字幕正中上方, \an9的定位点在字幕右上角
+　　　　　　　　　   一行中有多个\pos时以最前面的\pos值为准
+\move(<x1>, <y1>, <x2>, <y2>[, <时值1>, <时值2>])
+　　　　　　　　　   提供从一个位置到另一个位置的移动动态效果.
+　　　　　　　　　   x1, y1是定位点起始的坐标(定位点的说明参见\pos 代码), x2, y2是定位点结束的坐标
+　　　　　　　　　   1)未达到<时值1>时, 文字位置的定位点在(x1, y1)
+　　　　　　　　　   2)在<时值1>和<时值2>之间, 定位点从(x1, y1)移动到(x2, y2)
+　　　　　　　　　   3)超过<时值2>后, 文字的定位点固定在(x2, y2)点.
+　　　　　　　　　   当时值1, 时值2没有指明时相当于两个都是0, 此时在该行的整个时间段内匀速移动(时值的具体说明参见\t 代码)
+　　　　　　　　　   时值1, 时值2可以大于该行的总时间段, 令没有达到终点时结束移动.
+　　　　　　　　　   \move 只能够匀速移动, 不能够加速移动
+　　　　　　　　　   一行中有多个\move代码时只有排在最前面的\move效果有效
+　　　　　　　　　   一行中不能同时使用{\pos}和{\move}代码, 如果同时出现则只有排在最前面的效果有效
+\org(<x>, <y>)　　　　设置旋转的原点坐标(origin), 它影响一行中所有的旋转
+　　　　　　　　　   当有旋转效果的一行中没有\org代码, 则用于旋转的原点坐标就是默认的定位点.
+　　　　　　　　　   原点坐标可以放置在画面可见区域以外, 足够远时通过旋转一个小角度可让字幕产生”穿过屏幕”的效果
+　　　　　　　　　   一行中有多个\org代码时只有排在最前面的\org有效
+　　　　　　　　　   注意: \t, \move 和 \pos 会忽略位置重叠的检测
+\fad(<淡入时间>,<淡出时间>)
+　　　　　　　　　   提供简单的淡入淡出效果. <淡入时间>与<淡出时间>之和不能超过该行的时间长度.
+\fade(<a1>,<a2>,<a3>,<时值1>,<时值2>,<时值3>,<时值4>)
+　　　　　　　　　   提供复杂的透明度变化效果. <a1>,<a2>,<a3>为三个不同的透明度值(alpha), 取值从0到255. 0全见,255全透明
+　　　　　　　　　   这个代码里的7个参数要求全部写齐, 作用方式如下:
+　　　　　　　　　   1) 在<时值1>之前, 透明度为<a1>
+　　　　　　　　　   2) 在<时值1>与<时值2>之间, 透明度从<a1>变化到<a2>
+　　　　　　　　　   3) 在<时值2>与<时值3>之间, 透明度为固定的<a2>
+　　　　　　　　　   4) 在<时值3>与<时值4>之间, 透明度从<a2>变化到<a3>
+　　　　　　　　　   5) 在<时值4>之后, 透明度为<a3>
+\clip(<x1>, <y1>, <x2>, <y2>)
+　　　　　　　　　   定义一个矩形框, 只有在这个框里的字幕才为可见
+<x1>, <y1>, <x2>, <y2>为构成矩形的两个对角点
+　　　　　　　　　   \clip([<等级>,] <绘图命令>)
+　　　　　　　　　   定义一个绘画图形, 令这个图形内的字幕可见
+　　　　　　　　　   <绘图命令>参见第二组代码.
+　　　　　　　　　   <等级>是指定图形的缩放等级. 为2的(等级-1)次方. 如/clip4, 2的(4-1)次方为8, 即将后面的图形缩至1/8
+
+(二)绘图代码
+
+\p<等级>　　　　　　进入绘图模式并指定坐标的放大等级.
+　　　　　　　　　   <等级>为坐标的缩放等级, 按2的(等级-1)次方计算. 如/clip4, 2的(4-1)次方为8, 即将后面的坐标缩至1/8
+　　　　　　　　　  当<等级>=0时, 关闭绘图模式.
+\pbo<y>　　　　　　 定义所绘图形的基线偏移值.(baseline offset)
+　　　　　　　　　  当y>0时, 图形的所有坐标沿y轴向下移指定的像素值
+　　　　　　　　　  当y<0时, 图形的所有坐标沿y轴向上移指定的像素值
+
+绘图命令:
+
+m <x> <y>　　　　　  将鼠标移至坐标(x, y), 同时将现有的图形封闭(即开始画新的图形), 所有绘画都以这个命令开始.
+n <x> <y>　　　　　   将鼠标移至坐标(x, y), 同时不封闭原有的图形
+l <x> <y>　　　　　　从鼠标原来的坐标位置画一条直线到(x, y), 并从这个点继续绘画　　　　
+b <x1> <y1> <x2> <y2> <x3> <y3>
+　　　　　　　　　   画一条三度贝塞尔曲线至(x3, y3), 以(x1, y1), (x2, y2)作为控制点
+s <x1> <y1> <x2> <y2> <x3> <y3> .. <xN> <yN>
+　　　　　　　　　  从现有坐标画一条”三次均匀B样条”(cubic uniform b-spline)到点(xN, yN)
+　　　　　　　　　  该命令至少要含有三个坐标点(三个坐标时等同于贝塞尔曲线)
+　　　　　　　　　  这个命令实质上是把几条贝塞尔曲线连结到一起.
+p <x> <y>　　　　　 沿长B样条(b-spline)到点(x, y), 作用相当于在s命令后多加一个坐标点(x, y)
+c　　　　　　　　　  结束B样条(b-spline)
+
+绘图代码的注意事项:
+1) 除了在\clip(..)命令中, 绘图命令必须以{\p1+}开头, 以{\p0}结尾.  (“1+”指大于等于1的整数)
+2) 所有绘图都必须以m 命令开头
+3) 所有图形都必须最终闭合
+4) 所有没有闭合的图形会在起始点和终点之间连上一条直线来闭合
+5) 在同一行中, 若图形有重叠, 则重叠部分执行异或逻辑运算(即正正得负, 负负得正)
+6) 如果相同的绘图命令在一起, 则只需保留最前面命令代码, 后面的坐标可以连着写
+7) 绘图中使用的是相对坐标系. 坐标原点由当前的基线位置(\pbo), 当前行的排列方式决定(参见\pos的定位点说明)
+8) 命令p c只能用在B样条命令s的后面
+
+ASS之后又有更新的版本, 如ASS2, ASS3等. 这些在开发中没有整合出最终版本, 因此没有官方的相关具体说明文件, 也没有得到广泛使用. 而它新增的一些代码和改动, 可以为VSFilter 2.39以上的版本识别和使用. 虽不推荐在字幕发布中使用, 但可用于压制中.
+边框宽度　　　　\xbord<字号>
+　　　　　　　　\ybord<字号>
+　　　　　　　　沿x轴和y轴分别对文字边框宽度进行调整. 注: 如果在一行中用了\xbord, \ybord后又使用\bord, 则会被\bord覆写.
+阴影深度　　　　\xshad<depth>
+　　　　　　　　\yshad<depth>
+　　　　　　　　 沿x轴和y轴分别对文字阴影深度进行调整, 可以使用负值
+边缘模糊　　　　\be<强度>
+　　　　　　　　 按一般模糊的倍数来模糊文字边缘, <强度>必须为整数. 注当强度过大时会导致文字”消失”
+　　　　　　　　\blur<强度>
+　　　　　　　　与\be相似, 但它用的是更加高级的高斯模糊, <强度>可以为非整数. 注意过高的值可能占用过多系统CPU
+文字倾斜　　　　\fax<因数>
+　　　　　　　　\fay<因数>
+　　　　　　　　沿x轴和y轴分别对文字行进行倾斜调整. <因数>可以为负数. 如\fax-0.5等同于斜体. (注: 一般情况下因数的绝对值不要超过2)
+卡拉OK　　　　  \kt<时间长度>
+　　　　　　　　传统的卡拉OK模式是从左至右, 依次填充音节. 而\kt<时间长度>重新定义了该音节开始填充的时间
+　　　　　　　　<时间长度>是指该音节从整行开始过了多长时间后开始填充.
+　　　　　　　　例如{\k10}一{\kt30\k10}二{\kt10\k10}三
+　　　　　　　　先填充”一”, 过了0.1秒后”一”填充完毕, 开始填充”三”, 又过了0.1秒”三”填充完毕, 再过了0.1秒(一行开始后0.3秒)开始填充”二”
+动态风格　　　　\t([<时值1>, <时值2>, ] [<加速度>,] <风格代码>)　　　　
+　　　　　　　　除了原有的风格, 新增了以下的代码也可以使用{\t}动态转变效果
+　　　　　　　　\fax \fay \be \blur \xbord \ybord \xshad \yshad \iclip
+　　　　　　　　(注: 对于\clip和\iclip, 只有矩形框才能使用动态效果, 绘画图形不能使用动态效果)
+图形蒙板　　　　\iclip(<x1>,<y1>,<x2>,<y2>)
+　　　　　　　　\iclip([<等级>,] <绘图命令>)
+　　　　　　　　\iclip与\clip相似, 所有参数与命令都一致, 但效果相反, 即在图形区域内的文字不可见, 以外的文字可见.
+　　　　　　　　注: 当\iclip和\clip出现在同一行时, 所有的图形效果都会当成”\iclip”处理.
+另注:
+所有的坐标值不再局限使用整数, 可以使用小数.　　　　　　　　
+一行的开始, 结束时间, 以及卡拉OK的时间可以使用更加精准的时间(原SSA, ASS都只精确到0.01秒)<未验证>
+
+附B. 内嵌的字体/图片编码
+
+SSA所使用的内嵌字体/图片编码是UUE-encoding的一种形式. (因极少用到, 以下仅引用原文)
+It takes a binary file, three bytes at a time, and converts the 24bits of those bytes into four 6-bit numbers. 33 is added to each of these four numbers, and the corresponding ascii character for each number is written into the script file.
+The offset of 33 means that lower-case characters cannot appear in the encoded output, and this is why the “filename” lines are always lower case.
+Each line of an encoded file is 80 characters long, except the last one, which may be shorter.
+If the length of the file being encoded is not an exact multiple of 3, then for odd-number filelengths, the last byte is multiplied by hexadecimal 100, and the most significant 12 bits are converted to two characters as above. For even-number filelengths, the last two bytes are multiplied by hexadecimal 10000, and the most significant 18 bits are converted to three characters as above.
+There is no terminating code for the embedded files. If a new [section] starts in the script, or if another filename line is found, or the end of the script file is reached then the file is considered complete.
