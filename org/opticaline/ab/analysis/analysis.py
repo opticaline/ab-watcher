@@ -1,3 +1,4 @@
+# coding=utf-8
 from bs4 import BeautifulSoup
 from org.opticaline.ab.analysis.danmu2ass import DanMuManager
 import base64
@@ -10,6 +11,9 @@ class Analysis:
     info = None
     api = 'http://flvsp.sinaapp.com/getData.php?url='
     dan_mu = None
+    section_priority = {'标清': 0.8, '分段': 0.6}
+    clarity_priority = {'原画': 10, '超清': 8, '高清': 6, '标清': 4}
+    format_priority = {'M3U8': -20, 'FlV': 0.06}
 
     def __init__(self, **kwargs):
         self.__dict__ = kwargs
@@ -20,17 +24,29 @@ class Analysis:
         url = self.info['url'].replace('http://', 'http:##')
         url = base64.b64encode(url.encode()).decode()
         temp = Ajax().get(self.api + url)
-        # temp = Ajax(False).get('http://localhost:63342/AB/getData.html')
+        # temp = Ajax(False).get('http://localhost:63342/ab-watcher/getData.html')
         html = temp[157:-74]
         soup = BeautifulSoup(html)
         video = []
+        score = 0
         for div in soup.select('div.panel'):
             if len(div.select('.glyphicon-subtitles')) > 0:
                 self.dan_mu = div.select('p a')[0].attrs['href']
-            elif str(div).find('原画') != -1:
-                for a in div.select('div.panel-body p a'):
-                    video.append(a.attrs['href'])
-                break
+            else:
+                head = div.select('.panel-heading')
+                body = div.select('.panel-body')
+                infos = head[0].select('code')
+                if len(infos) > 0:
+                    [section, clarity, sFormat] = infos[0].getText().split('_')
+                    t = self.section_priority.get(section, 0)
+                    t += self.clarity_priority.get(clarity, 0)
+                    t += self.format_priority.get(sFormat, 0)
+                    if score < t:
+                        video.clear()
+                        for p in body[0].select('p'):
+                            video.append(p.select('a.file_url')[0].attrs['href'])
+                            # 通过获取进一步的详细信息
+                            # p.select('code')
         return video
 
     def get_ass(self):
