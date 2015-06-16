@@ -34,6 +34,6 @@ class AcFunParse(Parse):
             temp.extend(d)
         for d in temp:
             c = d['c'].split(',')
-            self.ass.add_message(Message(float(c[0]), int(c[1]), d['m']))
+            self.ass.add_message(float(c[0]), int(c[1]), d['m'], int(c[2]))
 
         return str(self.ass)

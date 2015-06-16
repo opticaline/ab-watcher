@@ -4,6 +4,7 @@ __author__ = 'opticaline'
 class Ass:
     attr = dict()
     attr_name = ('Script Info', 'V4+ Styles', 'Events', 'Fonts', 'Graphics', '', '', '', '')
+    time_line = dict()
 
     def __init__(self):
         self.attr['Script Info'] = '''ScriptType: v4.00+
@@ -15,8 +16,15 @@ Style: AcplayDefault, Microsoft YaHei, 64, &H00FFFFFF, &H00FFFFFF, &H00000000, &
         self.attr['Events'] = '''Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 '''
 
-    def add_message(self, message):
+    def add_message(self, start, color, message, style):
+        message = Message(start, color, message, style, self.add_time_line(start))
         self.attr['Events'] += str(message)
+
+    def add_time_line(self, start):
+        key = int(start / 7) * 7
+        line = self.time_line.get(key, 0)
+        self.time_line[key] = line + 1
+        return line
 
     def __str__(self):
         text = ''
@@ -29,11 +37,15 @@ Style: AcplayDefault, Microsoft YaHei, 64, &H00FFFFFF, &H00FFFFFF, &H00000000, &
 class Message:
     start = None
     message = None
+    (SCROLL, TOP, BOTTOM) = (1, 5, 4)
 
-    def __init__(self, start, color, message):
+    def __init__(self, start, color, message, style, line):
+        self.line = line
         self.start = self.to_hms(start)
-        self.end = self.to_hms(start + (len(message) / 10 + 1) * 60)
-        self.message = self.make_msg(message, color)
+        self.end = self.init_end(start, len(message))
+        self.style = style
+        (self.x1, self.y1, self.x2, self.y2) = self.init_position()
+        self.message = self.make_msg(message, color, self.make_mode())
 
     @staticmethod
     def to_hms(seconds):
@@ -46,12 +58,38 @@ class Message:
         return '%d:%02d:%02d.%02d' % (h, m, s, d * 100)
 
     @staticmethod
-    def make_msg(message):
-        return message
+    def init_end(seconds, length):
+        end_seconds = seconds + 7 + (length / 2)
+        return Message.to_hms(end_seconds)
+
+    @staticmethod
+    def make_msg(message, color, mode):
+        # 1080 / 70
+        color = Message.make_color(color)
+        return "{{{2}\c&H{1}}}{0}".format(message, color, mode)
+
+    def make_mode(self):
+        if self.style == self.SCROLL:
+            return "\move({x1}, {y1}, {x2}, {y2})".format(**self.__dict__)
+        elif self.style in [self.TOP, self.BOTTOM]:
+            return "\\a6\pos({x1}, {y1})".format(**self.__dict__)
+
+    @staticmethod
+    def make_color(color):
+        return hex(color)[2:].zfill(6)
+
+    def init_position(self):
+        if self.style == self.SCROLL:
+            return (1920, self.line * 70, 0, self.line * 70)
+        elif self.style == self.TOP:
+            pass
+        elif self.style == self.BOTTOM:
+            return (int(1920 / 2), 800, 0, 0)
+        else:
+            pass
 
     def __str__(self):
-        return "Dialogue: 3,{start},{end},AcplayDefault,,0000,0000,0000,," \
-               "{{\move(2016, 64, -96, 64)}}{message}\n".format(**self.__dict__)
+        return "Dialogue: 3,{start},{end},AcplayDefault,,0000,0000,0000,,{message}\n".format(**self.__dict__)
 
         # def init_styled_text(self, ):
         #     if self.nico_subtitle.font_color == 'FFFFFF':

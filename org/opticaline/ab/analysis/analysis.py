@@ -53,8 +53,8 @@ class Analysis:
     def get_ass(self):
         m = DanMuManager()
         if m.can_do(self.site):
-            return m.trans(self.site, 'http://static.comment.acfun.mm111.net/2266943-0')
-            # self.dan_mu
+            # return m.trans(self.site, 'http://static.comment.acfun.mm111.net/2266943-0')
+            return m.trans(self.site, self.dan_mu)
         else:
             return None
 
