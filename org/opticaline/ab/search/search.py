@@ -9,7 +9,7 @@ __author__ = 'opticaline'
 class Ajax:
     opener = None
 
-    def __init__(self, use_proxy=True):
+    def __init__(self, use_proxy=False):
         if use_proxy:
             proxy_hand = urllib.request.ProxyHandler({"http": "http://zhang-xu-neu:Bronze3!@192.168.107.27:8080"})
             self.opener = urllib.request.build_opener(proxy_hand)
@@ -53,7 +53,7 @@ class AcFunSearch(Search):
             keyword = {}
 
         def repl(matched):
-            return keyword.get(matched.group("key"), '')
+            return urllib.request.quote(keyword.get(matched.group("key"), ''))
 
         return re.sub('\{(?P<key>\w+)\}', repl, url)
 

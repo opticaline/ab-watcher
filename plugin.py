@@ -1,11 +1,16 @@
 def results(fields, original_query):
-  message = fields['~message']
-  return {
-    "title": "Say '{0}'".format(message),
-    "run_args": [message]
-  }
+    message = fields['~message']
+    log(message)
+    return {
+        "title": "ab '{0}'".format(message),
+        "run_args": [message]
+    }
+
 
 def run(message):
-  import os, pipes
-  os.system('say "{0}"'.format(pipes.quote(message.encode('utf8'))))
+    log(message)
 
+def log(message):
+    file = open('/Users/Xu/ab.log', 'x')
+    file.write(message)
+    file.close()

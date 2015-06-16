@@ -12,9 +12,9 @@ class Analysis:
     info = None
     api = 'http://flvsp.sinaapp.com/getData.php?url='
     dan_mu = None
-    section_priority = {'标清': 0.8, '分段': 0.6}
-    clarity_priority = {'原画': 10, '超清': 8, '高清': 6, '标清': 4}
-    format_priority = {'M3U8': -20, 'FlV': 0.06}
+    section_priority = {'单段': 0.8, '分段': 0.6}
+    clarity_priority = {'原画': 10, '超清': 8, '高清': 6, '标清': 4, '低清': 2}
+    format_priority = {'M3U8': -20, 'FlV': 0.06, 'MP4': 0.08}
 
     def __init__(self, **kwargs):
         self.__dict__ = kwargs
@@ -43,11 +43,15 @@ class Analysis:
                     t += self.clarity_priority.get(clarity, 0)
                     t += self.format_priority.get(sFormat, 0)
                     if score < t:
+                        score = t
                         video.clear()
                         for p in body[0].select('p'):
                             video.append(p.select('a.file_url')[0].attrs['href'])
                             # 通过获取进一步的详细信息
                             # p.select('code')
+        if len(video) == 0:
+            print(soup)
+
         return video
 
     def get_ass(self):
@@ -61,7 +65,7 @@ class Analysis:
     def get_ass_path(self):
         ass_text = self.get_ass()
         if ass_text is not None:
-            path = 'D:\\subtitles\\{0}-{1}.ass'.format(self.info['title'], int(time.time()))
+            path = '/Users/Xu/{0}-{1}.ass'.format(self.info['title'], int(time.time())).replace(' ', '')
             file = open(path, mode='x', encoding='utf-8')
             file.write(ass_text)
             file.close()

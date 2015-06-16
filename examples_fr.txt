@@ -1,2 +1,0 @@
-dire ~message(Bonjour)
-dis ~message(Hello, world)

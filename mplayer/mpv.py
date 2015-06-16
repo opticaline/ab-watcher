@@ -7,11 +7,11 @@ class Mpv:
     mpv_path = None
     mpv = None
 
-    def __init__(self, mpv_path='D:\mpv\mpv.exe'):
+    def __init__(self, mpv_path='mpv'):
         self.mpv_path = mpv_path
 
     def play(self, file_list, subtitle, title=None):
-        cmd = [self.mpv_path, '--merge-files']
+        cmd = [self.mpv_path, '--volume', '20', '--merge-files']
         cmd.extend(file_list)
         # subtitle
         if subtitle is not None:

@@ -20,7 +20,8 @@ if __name__ == '__main__':
         manager = SearchManager(options)
         array = manager.search(args)
         #
-        analysis = Analysis(info=array[0])
+        info = array[2]
+        analysis = Analysis(info=info)
         video = analysis.get_video()
         subtitle = analysis.get_ass_path()
-        Player().play(video, subtitle, array[0]['title'])
+        Player().play(video, subtitle, info['title'])

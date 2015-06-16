@@ -5,6 +5,8 @@ class Ass:
     attr = dict()
     attr_name = ('Script Info', 'V4+ Styles', 'Events', 'Fonts', 'Graphics', '', '', '', '')
     time_line = dict()
+    width = 1920
+    height = 1080
 
     def __init__(self):
         self.attr['Script Info'] = '''ScriptType: v4.00+
@@ -12,19 +14,27 @@ Collisions: Normal
 PlayResX: 1920
 PlayResY: 1080'''
         self.attr['V4+ Styles'] = '''Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
-Style: AcplayDefault, Microsoft YaHei, 64, &H00FFFFFF, &H00FFFFFF, &H00000000, &H00000000, 0, 0, 0, 0, 100, 100, 0.00, 0.00, 1, 1, 0, 2, 20, 20, 20, 0'''
+Style: AcplayDefault, Microsoft YaHei, 50, &H00FFFFFF, &H00FFFFFF, &H00000000, &H00000000, 0, 0, 0, 0, 100, 100, 0.00, 0.00, 1, 1, 0, 2, 20, 20, 20, 0'''
         self.attr['Events'] = '''Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 '''
 
     def add_message(self, start, color, message, style):
-        message = Message(start, color, message, style, self.add_time_line(start))
+        message = Message(start, color, message, style, self.add_time_line(start, len(message)))
         self.attr['Events'] += str(message)
 
-    def add_time_line(self, start):
-        key = int(start / 7) * 7
-        line = self.time_line.get(key, 0)
-        self.time_line[key] = line + 1
-        return line
+    def add_time_line(self, start, length):
+        time = int(start / 7) * 7
+        length /= 10
+
+        def add(key):
+            line = self.time_line.get(key, 0)
+            self.time_line[key] = line + 1
+            return line
+
+        for i in range(int(length)):
+            add(time + i * 7)
+
+        return add(time)
 
     def __str__(self):
         text = ''
@@ -37,6 +47,7 @@ Style: AcplayDefault, Microsoft YaHei, 64, &H00FFFFFF, &H00FFFFFF, &H00000000, &
 class Message:
     start = None
     message = None
+    MAX_LINE = 15
     (SCROLL, TOP, BOTTOM) = (1, 5, 4)
 
     def __init__(self, start, color, message, style, line):
@@ -79,14 +90,17 @@ class Message:
         return hex(color)[2:].zfill(6)
 
     def init_position(self):
+        line, m = divmod(self.line, self.MAX_LINE)
+        line += (m * 0.5 + 1)
         if self.style == self.SCROLL:
-            return (1920, self.line * 70, 0, self.line * 70)
+            return (1920, line * 70, 0, line * 70)
         elif self.style == self.TOP:
-            pass
+            return (int(1920 / 2), 50, 0, 0)
         elif self.style == self.BOTTOM:
             return (int(1920 / 2), 800, 0, 0)
         else:
-            pass
+            print(self.style)
+            return (1920, line * 70, 0, line * 70)
 
     def __str__(self):
         return "Dialogue: 3,{start},{end},AcplayDefault,,0000,0000,0000,,{message}\n".format(**self.__dict__)
