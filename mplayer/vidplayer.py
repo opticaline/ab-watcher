@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import mpylayer
 from PyQt4 import QtGui, QtCore
 from mplayer.player import BasePlayer
 
@@ -10,7 +9,9 @@ class VidPlayer(QtGui.QMainWindow):
         super(VidPlayer, self).__init__(parent)
         self.centralWidget = QtGui.QWidget(self)
         self.video = QtGui.QWidget(self.centralWidget)
-        self.video.setStyleSheet('background: red')
+        self.video.setStyleSheet('background: black')
+        self.video.setMinimumWidth(800)
+        self.video.setMinimumHeight(460)
         self.playButton = QtGui.QPushButton('Play', self.centralWidget)
         self.stopButton = QtGui.QPushButton('Stop', self.centralWidget)
         self.buttonsLayout = QtGui.QHBoxLayout()
@@ -21,8 +22,7 @@ class VidPlayer(QtGui.QMainWindow):
         self.mainLayout.addLayout(self.buttonsLayout)
         self.setCentralWidget(self.centralWidget)
 
-        i = self.video.winId()
-        player = BasePlayer('mplayer', ['-wid', str(i)])
+        player = BasePlayer('D:\mplayer\mplayer.exe', ['-wid', str(int(self.video.winId()))])
         self.mplayer = player.test()
 
         # self.mplayer = mpylayer.MPlayerControl(extra_args=['-wid', str(self.video.winId())])

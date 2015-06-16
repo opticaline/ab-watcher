@@ -1,5 +1,6 @@
 __author__ = 'opticaline'
 
+from mplayer.mpv import Mpv
 from subprocess import Popen
 
 
@@ -16,9 +17,12 @@ class BasePlayer:
     def _mplayer(self):
         cmd = [self.mplayer_path, '-slave', '-quiet', '-idle']
         cmd.extend(self.args)
-        # cmd += ['/Users/Xu/Downloads/test.flv']
+        cmd += ['D:\Test.wmv', '-ass', '-sub', 'D:\QYQX.ass']
         print(cmd)
         self._mp = Popen(cmd)
 
     def test(self):
         return self._mp
+
+Player = Mpv
+

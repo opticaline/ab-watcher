@@ -29,8 +29,10 @@ class Parse:
 class AcFunParse(Parse):
     def trans(self):
         data = json.loads(self.context)
-        data = data[0] + data[1]
+        temp = []
         for d in data:
+            temp.extend(d)
+        for d in temp:
             c = d['c'].split(',')
             self.ass.add_message(Message(float(c[0]), int(c[1]), d['m']))
 

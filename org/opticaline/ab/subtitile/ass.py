@@ -1,6 +1,5 @@
 __author__ = 'opticaline'
 
-# mplayer.exe -sub ../Community.S06E08.720p.WEBRip.x264-BATV.简体.ass -subcp utf-8 http://localhost:63342/AB/Wildlife.wmv
 
 class Ass:
     attr = dict()
@@ -26,6 +25,7 @@ Style: AcplayDefault, Microsoft YaHei, 64, &H00FFFFFF, &H00FFFFFF, &H00000000, &
                 text += '[{name}]\n{value}\n\n'.format(name=name, value=str(self.attr[name]))
         return text
 
+
 class Message:
     start = None
     message = None
@@ -33,7 +33,7 @@ class Message:
     def __init__(self, start, color, message):
         self.start = self.to_hms(start)
         self.end = self.to_hms(start + (len(message) / 10 + 1) * 60)
-        self.message = message
+        self.message = self.make_msg(message, color)
 
     @staticmethod
     def to_hms(seconds):
@@ -45,28 +45,34 @@ class Message:
         h, m = divmod(m, 60)
         return '%d:%02d:%02d.%02d' % (h, m, s, d * 100)
 
-    def __str__(self):
-        return "Dialogue: 3,{start},{end},AcplayDefault,,0000,0000,0000,,{message}\n".format(**self.__dict__)
+    @staticmethod
+    def make_msg(message):
+        return message
 
-    def init_styled_text(self, ):
-        if self.nico_subtitle.font_color == 'FFFFFF':
-            color_markup = ''
-        else:
-            color_markup = '\\c&H%s' % self.nico_subtitle.font_color
-        if self.nico_subtitle.white_border:
-            border_markup = '\\3c&HFFFFFF'
-        else:
-            border_markup = ''
-        if self.font_size == self.base_font_size:
-            font_size_markup = ''
-        else:
-            font_size_markup = '\\fs%d' % self.font_size
-        if self.nico_subtitle.style == NicoSubtitle.SCROLL:
-            style_markup = '\\move(%d, %d, %d, %d)' % (self.x1, self.y1, self.x2, self.y2)
-        else:
-            style_markup = '\\a6\\pos(%d, %d)' % (self.x1, self.y1)
-        markup = ''.join([style_markup, color_markup, border_markup, font_size_markup])
-        return '{%s}%s' % (markup, self.nico_subtitle.text)
+    def __str__(self):
+        return "Dialogue: 3,{start},{end},AcplayDefault,,0000,0000,0000,," \
+               "{{\move(2016, 64, -96, 64)}}{message}\n".format(**self.__dict__)
+
+        # def init_styled_text(self, ):
+        #     if self.nico_subtitle.font_color == 'FFFFFF':
+        #         color_markup = ''
+        #     else:
+        #         color_markup = '\\c&H%s' % self.nico_subtitle.font_color
+        #     if self.nico_subtitle.white_border:
+        #         border_markup = '\\3c&HFFFFFF'
+        #     else:
+        #         border_markup = ''
+        #     if self.font_size == self.base_font_size:
+        #         font_size_markup = ''
+        #     else:
+        #         font_size_markup = '\\fs%d' % self.font_size
+        #     if self.nico_subtitle.style == NicoSubtitle.SCROLL:
+        #         style_markup = '\\move(%d, %d, %d, %d)' % (self.x1, self.y1, self.x2, self.y2)
+        #     else:
+        #         style_markup = '\\a6\\pos(%d, %d)' % (self.x1, self.y1)
+        #     markup = ''.join([style_markup, color_markup, border_markup, font_size_markup])
+        #     return '{%s}%s' % (markup, self.nico_subtitle.text)
+
 
 if __name__ == '__main__':
     ass = Ass()
