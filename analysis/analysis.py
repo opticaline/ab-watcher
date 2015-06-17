@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
-# coding=utf-8
 import time
 import base64
 
 from bs4 import BeautifulSoup
 
-from analysis.danmu2ass import DanMuManager
+from analysis import DanMuManager
 from search.search import Ajax
 
 __author__ = 'opticaline'

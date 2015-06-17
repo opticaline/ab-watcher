@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
-from mplayer.player import Player
+from player import Player
 from analysis.analysis import Analysis
-from search.searchmanager import SearchManager
+from optparse import OptionParser
+from search import SearchManager
 
 __author__ = 'opticaline'
-from optparse import OptionParser
 
 if __name__ == '__main__':
     parser = OptionParser()

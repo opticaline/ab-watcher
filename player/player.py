@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-__author__ = 'opticaline'
-
-from mplayer.mpv import Mpv
+from player.mpv import Mpv
 from subprocess import Popen
+
+__author__ = 'opticaline'
 
 
 class BasePlayer:

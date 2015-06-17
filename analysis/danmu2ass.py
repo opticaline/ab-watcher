@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 import json
-from search.search import Ajax
-
-from subtitile.ass import Ass
+from search import Ajax
+from subtitile import Ass
 
 __author__ = 'opticaline'
 
