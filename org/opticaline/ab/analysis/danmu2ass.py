@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import json
 from org.opticaline.ab.search.search import Ajax
 from org.opticaline.ab.subtitile.ass import Ass, Message

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import json
 import urllib
 from urllib.request import Request

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from org.opticaline.ab.search.search import *
 
 __author__ = 'opticaline'

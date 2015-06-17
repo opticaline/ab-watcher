@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from mplayer.player import Player
 from org.opticaline.ab.analysis.analysis import Analysis
 from org.opticaline.ab.search.searchmanager import SearchManager

@@ -1,1 +1,2 @@
-__author__ = 'neusoft'
+# -*- coding: utf-8 -*-
+__author__ = 'opticaline'

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import json
 settings = json.load(open("preferences.json"))
 shortcuts_dict = {}
