@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 import time
 import base64
+import logging
 
 from bs4 import BeautifulSoup
-
 from analysis import DanMuManager
 from config import Config
 from search.search import Ajax
@@ -21,6 +21,7 @@ class Analysis:
 
     def __init__(self, **kwargs):
         self.__dict__ = kwargs
+        logging.info('Analysis ' + kwargs['info']['url'])
         temp = self.info['url'].replace('http://', '').split('/')[0].split('.')
         self.site = temp[len(temp) - 2]
         self.config = Config()
@@ -55,7 +56,7 @@ class Analysis:
                             # 通过获取进一步的详细信息
                             # p.select('code')
         if len(video) == 0:
-            print(soup)
+            logging.error('Can\'t search video in {0}', soup)
 
         return video
 

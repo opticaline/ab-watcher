@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import logging
+import logging.config
 from player import Player
 from analysis.analysis import Analysis
 from optparse import OptionParser
@@ -7,6 +9,8 @@ from search import SearchManager
 __author__ = 'opticaline'
 
 if __name__ == '__main__':
+    # 使用配置文件配置logging
+    logging.config.fileConfig("config/logger.conf")
     parser = OptionParser()
     parser.add_option("-a", "--acfun", action="store_false", dest="GetAcFun", default=True,
                       help="Get movies from AcFun.tv")

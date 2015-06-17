@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import logging
 from subprocess import Popen
 from player.player import BasePlayer
 
@@ -23,5 +24,5 @@ class Mpv(BasePlayer):
             cmd.extend(['--sub-file', subtitle])
         if title is not None:
             cmd.extend(['--title', title])
-        print(' '.join(cmd))
+        logging.debug('Command run: {0}'.format(' '.join(cmd)))
         self.mpv = Popen(cmd)
