@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 import json
-from org.opticaline.ab.search.search import Ajax
-from org.opticaline.ab.subtitile.ass import Ass, Message
+from search.search import Ajax
+
+from subtitile.ass import Ass
 
 __author__ = 'opticaline'
 
@@ -18,6 +19,7 @@ class DanMuManager:
     def trans(self, site, url):
         handler = self.handler_map[site]
         return handler(url).trans()
+
 
 class Parse:
     context = None

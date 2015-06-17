@@ -10,7 +10,7 @@ __author__ = 'opticaline'
 class Ajax:
     opener = None
 
-    def __init__(self, use_proxy=False):
+    def __init__(self, use_proxy=True):
         if use_proxy:
             proxy_hand = urllib.request.ProxyHandler({"http": "http://zhang-xu-neu:Bronze3!@192.168.107.27:8080"})
             self.opener = urllib.request.build_opener(proxy_hand)

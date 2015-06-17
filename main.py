@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from mplayer.player import Player
-from org.opticaline.ab.analysis.analysis import Analysis
-from org.opticaline.ab.search.searchmanager import SearchManager
+from analysis.analysis import Analysis
+from search.searchmanager import SearchManager
 
 __author__ = 'opticaline'
 from optparse import OptionParser
@@ -14,15 +14,16 @@ if __name__ == '__main__':
                       help="Get movies from BiliBili.tv")
     parser.add_option("-c", "--cache", action="store_false", dest="Cache", default=0,
                       help="Cache the website result")
-    parser.add_option("-s", "--source", dest="Source", metavar="FILE", default="../../../config/source.json",
+    parser.add_option("-s", "--source", dest="Source", metavar="FILE", default="config/source.json",
                       help="write report to FILE")
     (options, args) = parser.parse_args()
     if len(args) > 0:
         manager = SearchManager(options)
         array = manager.search(args)
         #
-        info = array[2]
+        info = array[0]
         analysis = Analysis(info=info)
         video = analysis.get_video()
+        video = ['D:/videos/0300022F0051C4A0375C73092DCCF72F96DB86-FAFC-CBE5-8A3D-F5DC188425DB.flv']
         subtitle = analysis.get_ass_path()
         Player().play(video, subtitle, info['title'])

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-from org.opticaline.ab.search.search import *
+import json
+from search.search import AcFunSearch
 
 __author__ = 'opticaline'
 

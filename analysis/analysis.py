@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 # coding=utf-8
-from bs4 import BeautifulSoup
 import time
-from org.opticaline.ab.analysis.danmu2ass import DanMuManager
 import base64
-from org.opticaline.ab.search.search import Ajax
+
+from bs4 import BeautifulSoup
+
+from analysis.danmu2ass import DanMuManager
+from search.search import Ajax
 
 __author__ = 'opticaline'
 
@@ -66,7 +68,7 @@ class Analysis:
     def get_ass_path(self):
         ass_text = self.get_ass()
         if ass_text is not None:
-            path = '/Users/Xu/{0}-{1}.ass'.format(self.info['title'], int(time.time())).replace(' ', '')
+            path = 'D:/subtitles/{0}-{1}.ass'.format(self.info['title'], int(time.time())).replace(' ', '')
             file = open(path, mode='x', encoding='utf-8')
             file.write(ass_text)
             file.close()

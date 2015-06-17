@@ -25,5 +25,5 @@ class BasePlayer:
     def test(self):
         return self._mp
 
-Player = Mpv
 
+Player = Mpv
