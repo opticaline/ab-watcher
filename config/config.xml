@@ -10,5 +10,6 @@
             <subtitle-savepath>~/.temp/subtitles/</subtitle-savepath>
         </unix>
     </os>
+    <default-args>-b</default-args>
 </settings>
 
