@@ -5,6 +5,8 @@ from player.player import BasePlayer
 
 __author__ = 'opticaline'
 
+logger = logging.getLogger('ab')
+
 
 class Mpv(BasePlayer):
     mpv = None
@@ -24,5 +26,5 @@ class Mpv(BasePlayer):
             cmd.extend(['--sub-file', subtitle])
         if title is not None:
             cmd.extend(['--title', title])
-        logging.debug('Command run: {0}'.format(' '.join(cmd)))
+        logger.debug('Command run: {0}'.format(' '.join(cmd)))
         self.mpv = Popen(cmd)
