@@ -1,18 +1,22 @@
 # -*- coding: utf-8 -*-
 from subprocess import Popen
+from player.player import BasePlayer
 
 __author__ = 'opticaline'
 
 
-class Mpv:
-    mpv_path = None
+class Mpv(BasePlayer):
     mpv = None
+    volume = 20
 
     def __init__(self, mpv_path='D:/mpv/mpv.exe'):
-        self.mpv_path = mpv_path
+        super().__init__(mpv_path)
+
+    def set_volume(self, volume):
+        self.volume = volume
 
     def play(self, file_list, subtitle, title=None):
-        cmd = [self.mpv_path, '--volume', '20', '--merge-files']
+        cmd = [self.cmd, '--volume', str(self.volume), '--merge-files']
         cmd.extend(file_list)
         # subtitle
         if subtitle is not None:

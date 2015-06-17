@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
-__author__ = 'opticaline'
-
+from player.mpv import Mpv
 from player.player import *
 
-__init = ['Player']
+__author__ = 'opticaline'
+
+__init = ['Player', 'BasePlayer']
+
+Player = Mpv
