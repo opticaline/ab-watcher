@@ -16,11 +16,14 @@ if __name__ == '__main__':
                       help="Get movies from AcFun.tv")
     parser.add_option("-b", "--bilibili", action="store_false", dest="GetBilibili", default=True,
                       help="Get movies from BiliBili.tv")
-    parser.add_option("-c", "--cache", action="store_false", dest="Cache", default=0,
+    parser.add_option("-c", "--cache", action="store_true", dest="UseCache", default=False,
                       help="Cache the website result")
     parser.add_option("-s", "--source", dest="Source", metavar="FILE", default="config/source.json",
                       help="write report to FILE")
-    (options, args) = parser.parse_args()
+    # (options, args) = parser.parse_args()
+    command = '-b movie 魔兽'
+    (options, args) = parser.parse_args(command.split(' '))
+    print((options, args))
     if len(args) > 0:
         manager = SearchManager(options)
         array = manager.search(args)

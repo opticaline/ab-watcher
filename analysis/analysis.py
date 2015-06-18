@@ -58,7 +58,7 @@ class Analysis:
                             # 通过获取进一步的详细信息
                             # p.select('code')
         if len(video) == 0:
-            logger.error('Can\'t search video in {0}', soup)
+            logger.error('Can\'t search video in {0}'.format(soup))
 
         return video
 

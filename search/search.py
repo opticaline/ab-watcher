@@ -43,6 +43,7 @@ class AcFunSearch(Search):
         for url in self.source[t]:
             url = self.set_params(url, keyword)
             if t == 'search':
+                # TODO 增加对不同类型scope的搜索解析
                 result += self.translation(json.loads(self.get(url).replace('system.tv=', ''))['data']['page']['list'])
             else:
                 result += self.translation(json.loads(self.get(url)))

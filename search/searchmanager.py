@@ -56,7 +56,9 @@ class SearchManager:
             return []
 
     def get_data(self, t, keyword=None):
+        print(t)
+        print(keyword)
         data = []
-        for i in range(len(self.searcher)):
-            data += self.searcher[i].search(t, keyword)
+        for searcher in self.searcher:
+            data += searcher.search(t, keyword)
         return data

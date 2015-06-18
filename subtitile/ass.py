@@ -104,7 +104,7 @@ class Message:
         elif self.style == self.BOTTOM:
             return (int(1920 / 2), 800, 0, 0)
         else:
-            logger.error('un know style {0}', self.style)
+            logger.error('un know style {0}'.format(self.style))
             return (1920, line * 70, 0, line * 70)
 
     def __str__(self):
