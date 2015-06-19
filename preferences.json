@@ -1,11 +1,11 @@
 {
-  "voice" : "victoria",
-  "fast" : 1,
-  "shortcuts" : [
+  "voice": "victoria",
+  "fast": 1,
+  "shortcuts": [
     {
-      "message" : "five, four, three, two, one, zero!",
-      "shortcut" : "countdown"
+      "message": "five, four, three, two, one, zero!",
+      "shortcut": "countdown"
     }
   ],
-  "greeting" : "hello!"
+  "greeting": "hello!"
 }

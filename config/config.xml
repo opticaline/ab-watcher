@@ -1,6 +1,15 @@
 <?xml version='1.0' encoding='utf-8' ?>
-<config>
-    <mpv-path src="D:\\mpv\\mpv.exe"/>
-    <subtitle-savepath src="D:\\subtitles\\"/>
-</config>
+<settings>
+    <os>
+        <nt>
+            <player-cmd>D:\\mpv\\mpv.exe</player-cmd>
+            <subtitle-savepath>D:\\subtitles\\</subtitle-savepath>
+        </nt>
+        <unix>
+            <player-cmd>mpv</player-cmd>
+            <subtitle-savepath>~/.temp/subtitles/</subtitle-savepath>
+        </unix>
+    </os>
+    <default-args>-b</default-args>
+</settings>
 

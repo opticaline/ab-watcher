@@ -1,10 +1,14 @@
 # -*- coding: utf-8 -*-
-# coding=utf-8
-from bs4 import BeautifulSoup
 import time
-from org.opticaline.ab.analysis.danmu2ass import DanMuManager
 import base64
-from org.opticaline.ab.search.search import Ajax
+import logging
+
+from bs4 import BeautifulSoup
+from analysis import DanMuManager
+from config import Config
+from search.search import Ajax
+
+logger = logging.getLogger('ab')
 
 __author__ = 'opticaline'
 
@@ -19,8 +23,11 @@ class Analysis:
 
     def __init__(self, **kwargs):
         self.__dict__ = kwargs
+        logger.info('Analysis ' + kwargs['info']['url'])
         temp = self.info['url'].replace('http://', '').split('/')[0].split('.')
         self.site = temp[len(temp) - 2]
+        self.config = Config()
+        self.save_path = self.config['subtitle-savepath']
 
     def get_video(self):
         url = self.info['url'].replace('http://', 'http:##')
@@ -51,7 +58,7 @@ class Analysis:
                             # 通过获取进一步的详细信息
                             # p.select('code')
         if len(video) == 0:
-            print(soup)
+            logger.error('Can\'t search video in {0}'.format(soup))
 
         return video
 
@@ -66,7 +73,9 @@ class Analysis:
     def get_ass_path(self):
         ass_text = self.get_ass()
         if ass_text is not None:
-            path = '/Users/Xu/{0}-{1}.ass'.format(self.info['title'], int(time.time())).replace(' ', '')
+            path = '{0}/{1}-{2}.ass' \
+                .format(self.save_path, self.info['title'], int(time.time())) \
+                .replace(' ', '')
             file = open(path, mode='x', encoding='utf-8')
             file.write(ass_text)
             file.close()

@@ -10,7 +10,7 @@ __author__ = 'opticaline'
 class Ajax:
     opener = None
 
-    def __init__(self, use_proxy=False):
+    def __init__(self, use_proxy=True):
         if use_proxy:
             proxy_hand = urllib.request.ProxyHandler({"http": "http://zhang-xu-neu:Bronze3!@192.168.107.27:8080"})
             self.opener = urllib.request.build_opener(proxy_hand)
@@ -43,6 +43,7 @@ class AcFunSearch(Search):
         for url in self.source[t]:
             url = self.set_params(url, keyword)
             if t == 'search':
+                # TODO 增加对不同类型scope的搜索解析
                 result += self.translation(json.loads(self.get(url).replace('system.tv=', ''))['data']['page']['list'])
             else:
                 result += self.translation(json.loads(self.get(url)))

@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
+import logging
+
 __author__ = 'opticaline'
+
+logger = logging.getLogger('ab')
 
 
 class Ass:
@@ -100,7 +104,7 @@ class Message:
         elif self.style == self.BOTTOM:
             return (int(1920 / 2), 800, 0, 0)
         else:
-            print(self.style)
+            logger.error('un know style {0}'.format(self.style))
             return (1920, line * 70, 0, line * 70)
 
     def __str__(self):
@@ -125,9 +129,3 @@ class Message:
         #         style_markup = '\\a6\\pos(%d, %d)' % (self.x1, self.y1)
         #     markup = ''.join([style_markup, color_markup, border_markup, font_size_markup])
         #     return '{%s}%s' % (markup, self.nico_subtitle.text)
-
-
-if __name__ == '__main__':
-    ass = Ass()
-    ass.add_message(Message(915.66, 16777215, 'Test'))
-    print(ass)
