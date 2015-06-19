@@ -34,3 +34,4 @@ if __name__ == '__main__':
         video = ['D:/videos/0300022F0051C4A0375C73092DCCF72F96DB86-FAFC-CBE5-8A3D-F5DC188425DB.flv']
         subtitle = analysis.get_ass_path()
         Player().play(video, subtitle, info['title'])
+
