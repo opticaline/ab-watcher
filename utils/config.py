@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
-
 import os
+import logging
 from xml.etree import ElementTree
+
+logger = logging.getLogger(__name__)
 
 
 class Configuration:
@@ -24,8 +26,10 @@ class Configuration:
             tree = ElementTree.parse(file_path)
             name = os.path.basename(file_path).replace('.xml', '')
             self.trees.setdefault(name, tree)
+            logger.debug('Loading xml \'{}\''.format(file_path))
 
     def load_dir(self, file_path):
+        logger.debug('Loading folder \'{}\''.format(file_path))
         for root, dirs, files in os.walk(file_path):
             for f in files:
                 self.load_file(root + os.path.sep + f)
@@ -64,7 +68,13 @@ class Configuration:
         self.__all_do(lambda element: [element.text])
 
     def __get_attr(self, name):
-        self.__all_do(lambda element: [element.attrib.get(name, None)])
+        def fn(element):
+            t = element.attrib.get(name, None)
+            if t is not None:
+                return [t]
+            return []
+
+        self.__all_do(fn)
 
     def __all_do(self, fn):
         result = []

@@ -12,5 +12,5 @@ if __name__ == '__main__':
 
     from utils import Configuration
 
-    config = Configuration('./config')
-    print(config.get_properties('os.nt.player-cmd[test]'))
+    config = Configuration('.\\config')
+    print(config.get_properties('platform.nt.player-cmd[test]'))
