@@ -11,7 +11,7 @@ if __name__ == '__main__':
     # # print Requests.get_json(url='http://static.comment.acfun.mm111.net/93875-0')
     # print Requests.get_json(url='http://acfun.tv')
 
-
     from utils import Configuration
 
-    Configuration('D:\\resources\\ab.bundle\\config')
+    config = Configuration('D:\\resources\\ab.bundle\\config')
+    print(config.get_properties('os.nt.player-cmd[test]'))

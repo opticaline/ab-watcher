@@ -2,8 +2,8 @@
 <settings>
     <os>
         <nt>
-            <player-cmd>D:\\mpv\\mpv.exe</player-cmd>
-            <subtitle-savepath>D:\\subtitles\\</subtitle-savepath>
+            <player-cmd test="TEST">D:\mpv\mpv.exe</player-cmd>
+            <subtitle-savepath>D:\subtitles\</subtitle-savepath>
         </nt>
         <unix>
             <player-cmd>mpv</player-cmd>
