@@ -2,8 +2,6 @@
 import json
 from search.search import AcFunSearch
 
-__author__ = 'opticaline'
-
 
 class ArgsParser:
     all_type = set()

@@ -3,8 +3,6 @@
 import os
 from xml.etree import ElementTree
 
-__author__ = 'opticaline'
-
 
 class Configuration:
     trees = dict()

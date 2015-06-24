@@ -4,8 +4,6 @@ import urllib
 from urllib.request import Request
 import re
 
-__author__ = 'opticaline'
-
 
 class Ajax:
     opener = None

@@ -5,8 +5,6 @@ import logging
 
 from bs4 import BeautifulSoup
 
-__author__ = 'opticaline'
-
 logger = logging.getLogger(__name__)
 
 

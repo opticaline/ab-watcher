@@ -6,8 +6,6 @@ from analysis.analysis import Analysis
 from optparse import OptionParser
 from search import SearchManager
 
-__author__ = 'opticaline'
-
 if __name__ == '__main__':
     # 使用配置文件配置logging
     logging.config.fileConfig("config/logger.conf")
@@ -34,4 +32,3 @@ if __name__ == '__main__':
         video = ['D:/videos/0300022F0051C4A0375C73092DCCF72F96DB86-FAFC-CBE5-8A3D-F5DC188425DB.flv']
         subtitle = analysis.get_ass_path()
         Player().play(video, subtitle, info['title'])
-

@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging.config
 
-__author__ = 'opticaline'
 if __name__ == '__main__':
     # 使用配置文件配置logging
     logging.config.fileConfig("config/logger.conf")
@@ -13,5 +12,5 @@ if __name__ == '__main__':
 
     from utils import Configuration
 
-    config = Configuration('D:\\resources\\ab.bundle\\config')
+    config = Configuration('./config')
     print(config.get_properties('os.nt.player-cmd[test]'))

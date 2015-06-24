@@ -3,8 +3,6 @@ import json
 from search import Ajax
 from subtitile import Ass
 
-__author__ = 'opticaline'
-
 
 class DanMuManager:
     handler_map = dict()

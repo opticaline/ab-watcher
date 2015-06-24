@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 import logging
 
-__author__ = 'opticaline'
-
 logger = logging.getLogger('ab')
 
 

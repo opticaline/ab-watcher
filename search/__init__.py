@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-__author__ = 'opticaline'
+
 
 from search.searchmanager import SearchManager
 from search.search import Ajax

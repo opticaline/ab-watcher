@@ -3,8 +3,6 @@ import logging
 from subprocess import Popen
 from player.player import BasePlayer
 
-__author__ = 'opticaline'
-
 logger = logging.getLogger('ab')
 
 

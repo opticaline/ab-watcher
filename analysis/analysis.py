@@ -10,8 +10,6 @@ from search.search import Ajax
 
 logger = logging.getLogger('ab')
 
-__author__ = 'opticaline'
-
 
 class Analysis:
     info = None

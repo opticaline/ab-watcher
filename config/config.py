@@ -2,8 +2,6 @@
 import xml.etree.ElementTree as etree
 import os
 
-__author__ = 'opticaline'
-
 
 class Config:
     _config = None
