@@ -18,8 +18,9 @@ class Requests:
         self.__dict__ = kwargs
 
     def request(self):
-        opener = urllib2.build_opener(Requests.proxy)
-        urllib2.install_opener(opener)
+        if Requests.proxy is not None:
+            opener = urllib2.build_opener(Requests.proxy)
+            urllib2.install_opener(opener)
         return urllib2.urlopen(self.url).read()
 
     @staticmethod
