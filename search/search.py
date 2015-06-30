@@ -1,38 +1,23 @@
 # -*- coding: utf-8 -*-
 import json
 import urllib
-from urllib.request import Request
+from utils import Requests
 import re
-
-
-class Ajax:
-    opener = None
-
-    def __init__(self, use_proxy=True):
-        if use_proxy:
-            proxy_hand = urllib.request.ProxyHandler({"http": "http://zhang-xu-neu:Bronze3!@192.168.107.27:8080"})
-            self.opener = urllib.request.build_opener(proxy_hand)
-        else:
-            self.opener = urllib.request.build_opener()
-
-    def get(self, url):
-        return self.opener.open(url).readall().decode()
 
 
 class Search:
     source = []
-    ajax = None
 
     def __init__(self, source):
         self.source = source
-        self.ajax = Ajax()
 
     def search(self, t, keyword):
         pass
         # covers, url, title, description, views, username
 
-    def get(self, url):
-        return self.ajax.get(url)
+    @staticmethod
+    def get(url):
+        return Requests(url=url).request()
 
 
 class AcFunSearch(Search):
@@ -53,7 +38,7 @@ class AcFunSearch(Search):
             keyword = {}
 
         def repl(matched):
-            return urllib.request.quote(keyword.get(matched.group("key"), ''))
+            return Requests.quote(keyword.get(matched.group("key"), ''))
 
         return re.sub('\{(?P<key>\w+)\}', repl, url)
 

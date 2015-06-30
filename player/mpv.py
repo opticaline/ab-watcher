@@ -11,7 +11,7 @@ class Mpv(BasePlayer):
     volume = 20
 
     def __init__(self, mpv_path='D:/mpv/mpv.exe'):
-        super().__init__(mpv_path)
+        super(Mpv, self).__init__(mpv_path)
 
     def set_volume(self, volume):
         self.volume = volume

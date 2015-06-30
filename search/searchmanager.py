@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import json
-from search.search import AcFunSearch
+from .search import AcFunSearch
 
 
 class ArgsParser:
@@ -54,8 +54,6 @@ class SearchManager:
             return []
 
     def get_data(self, t, keyword=None):
-        print(t)
-        print(keyword)
         data = []
         for searcher in self.searcher:
             data += searcher.search(t, keyword)

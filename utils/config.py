@@ -12,7 +12,7 @@ class Configuration:
 
     def __init__(self, file_path=None):
         if file_path is not None:
-            self.load(file_path)
+            self.load(os.path.realpath(file_path))
 
     def load(self, file_path):
         if os.path.exists(file_path):
@@ -33,6 +33,10 @@ class Configuration:
         for root, dirs, files in os.walk(file_path):
             for f in files:
                 self.load_file(root + os.path.sep + f)
+
+    def get_property(self, key, setting=None):
+        temp = self.get_properties(key, setting)
+        return temp[0] if len(temp) > 0 else None
 
     def get_properties(self, key, setting=None):
         self.current_nodes = []

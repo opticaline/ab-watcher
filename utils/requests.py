@@ -44,3 +44,7 @@ class Requests:
             p.setdefault('https', https)
         if len(p.keys()) > 0:
             Requests.proxy = urllib2.ProxyHandler(p)
+
+    @staticmethod
+    def quote(s, safe='/'):
+        return urllib2.quote(s, safe)
