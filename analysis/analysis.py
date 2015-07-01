@@ -4,9 +4,8 @@ import base64
 import logging
 
 from bs4 import BeautifulSoup
-from analysis import DanMuManager
-from config import Config
-from search.search import Ajax
+from .danmu2ass import DanMuManager
+from utils import config, Requests
 
 logger = logging.getLogger('ab')
 
@@ -24,14 +23,13 @@ class Analysis:
         logger.info('Analysis ' + kwargs['info']['url'])
         temp = self.info['url'].replace('http://', '').split('/')[0].split('.')
         self.site = temp[len(temp) - 2]
-        self.config = Config()
-        self.save_path = self.config['subtitle-savepath']
+        self.config = config
+        self.save_path = self.config.get_property('platform.nt.subtitle-savepath')
 
     def get_video(self):
         url = self.info['url'].replace('http://', 'http:##')
         url = base64.b64encode(url.encode()).decode()
-        temp = Ajax().get(self.api + url)
-        # temp = Ajax(False).get('http://localhost:63342/ab-watcher/getData.html')
+        temp = Requests(url=self.api + url).request().decode('utf8')
         html = temp[157:-74]
         soup = BeautifulSoup(html)
         video = []
@@ -45,12 +43,12 @@ class Analysis:
                 infos = head[0].select('code')
                 if len(infos) > 0:
                     [section, clarity, sFormat] = infos[0].getText().split('_')
-                    t = self.section_priority.get(section, 0)
-                    t += self.clarity_priority.get(clarity, 0)
+                    t = self.section_priority.get(section.encode('utf8'), 0)
+                    t += self.clarity_priority.get(clarity.encode('utf8'), 0)
                     t += self.format_priority.get(sFormat, 0)
                     if score < t:
                         score = t
-                        video.clear()
+                        video = []
                         for p in body[0].select('p'):
                             video.append(p.select('a.file_url')[0].attrs['href'])
                             # 通过获取进一步的详细信息
@@ -71,10 +69,8 @@ class Analysis:
     def get_ass_path(self):
         ass_text = self.get_ass()
         if ass_text is not None:
-            path = '{0}/{1}-{2}.ass' \
-                .format(self.save_path, self.info['title'], int(time.time())) \
-                .replace(' ', '')
-            file = open(path, mode='x', encoding='utf-8')
+            path = '{0}{1}.ass'.format(self.save_path, int(time.time()))
+            file = open(path, mode='w')
             file.write(ass_text)
             file.close()
             return path

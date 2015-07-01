@@ -80,7 +80,7 @@ class Message:
     def make_msg(message, color, mode):
         # 1080 / 70
         color = Message.make_color(color)
-        return "{{{2}\c&H{1}}}{0}".format(message, color, mode)
+        return "{{{2}\c&H{1}}}{0}".format(message.encode('utf8'), color, mode)
 
     def make_mode(self):
         if self.style == self.SCROLL:

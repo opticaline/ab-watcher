@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import json
-from search import Ajax
 from subtitile import Ass
+from utils import Requests
 
 
 class DanMuManager:
@@ -23,7 +23,7 @@ class Parse:
     ass = Ass()
 
     def __init__(self, url):
-        self.context = Ajax().get(url)
+        self.context = Requests(url=url).request()
 
 
 class AcFunParse(Parse):

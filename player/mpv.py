@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import logging
 from subprocess import Popen
-from player.player import BasePlayer
+from .player import BasePlayer
 
 logger = logging.getLogger('ab')
 
@@ -11,7 +11,7 @@ class Mpv(BasePlayer):
     volume = 20
 
     def __init__(self, mpv_path='D:/mpv/mpv.exe'):
-        super(Mpv, self).__init__(mpv_path)
+        BasePlayer.__init__(self)
 
     def set_volume(self, volume):
         self.volume = volume
@@ -23,6 +23,6 @@ class Mpv(BasePlayer):
         if subtitle is not None:
             cmd.extend(['--sub-file', subtitle])
         if title is not None:
-            cmd.extend(['--title', title])
+            cmd.extend(['--title', unicode(title).encode('utf8')])
         logger.debug('Command run: {0}'.format(' '.join(cmd)))
         self.mpv = Popen(cmd)

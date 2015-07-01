@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
-from config import Config
-
+from utils import config
 
 class BasePlayer:
-    config = Config()
+    config = config
 
     def __init__(self, cmd=None):
         if cmd is None:
-            self.cmd = self.config['player-cmd']
+            self.cmd = self.config.get_property('platform.nt.player-cmd')
         else:
             self.cmd = cmd

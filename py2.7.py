@@ -11,4 +11,5 @@ if __name__ == '__main__':
 
     from utils import main
 
-    print(main.video_list(['qyqx']))
+    infos = main.video_list(['qyqx'])
+    main.play_video(infos[0])

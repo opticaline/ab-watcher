@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from player.mpv import Mpv
-from player.player import *
+from .mpv import Mpv
+from .player import *
 
 __init = ['Player', 'BasePlayer']
 

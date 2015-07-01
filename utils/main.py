@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
+import logging
 
 import sys
 from optparse import OptionParser
+from analysis.analysis import Analysis
+from player import Player
 from utils import config
 
 
@@ -32,5 +35,11 @@ def video_list(args=None):
     return []
 
 
-def play_video():
-    pass
+def play_video(info):
+    analysis = Analysis(info=info)
+    video = analysis.get_video()
+    logger = logging.getLogger(__name__)
+    logger.debug(video)
+    video = ['D:/videos/0300022F0051C4A0375C73092DCCF72F96DB86-FAFC-CBE5-8A3D-F5DC188425DB.flv']
+    subtitle = analysis.get_ass_path()
+    Player().play(video, subtitle, info['title'])
