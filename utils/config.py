@@ -2,6 +2,8 @@
 import os
 import logging
 from xml.etree import ElementTree
+import sys
+from utils import common
 
 logger = logging.getLogger(__name__)
 
@@ -10,9 +12,16 @@ class Configuration:
     trees = dict()
     current_nodes = None
 
+    keywords = dict()
+
     def __init__(self, file_path=None):
         if file_path is not None:
             self.load(os.path.realpath(file_path))
+        self.__init_keywords()
+
+    def __init_keywords(self):
+        self.keywords.setdefault('platform', sys.platform)
+        logger.info('config keywords {0}'.format(self.keywords))
 
     def load(self, file_path):
         if os.path.exists(file_path):
@@ -26,10 +35,10 @@ class Configuration:
             tree = ElementTree.parse(file_path)
             name = os.path.basename(file_path).replace('.xml', '')
             self.trees.setdefault(name, tree)
-            logger.debug('Loading xml \'{}\''.format(file_path))
+            logger.info('Loading xml \'{}\''.format(file_path))
 
     def load_dir(self, file_path):
-        logger.debug('Loading folder \'{}\''.format(file_path))
+        logger.info('Loading folder \'{}\''.format(file_path))
         for root, dirs, files in os.walk(file_path):
             for f in files:
                 self.load_file(root + os.path.sep + f)
@@ -39,6 +48,7 @@ class Configuration:
         return temp[0] if len(temp) > 0 else None
 
     def get_properties(self, key, setting=None):
+        key = self.pretreatment(key)
         self.current_nodes = []
         if setting is not None:
             temp = self.trees.get(setting)
@@ -64,6 +74,9 @@ class Configuration:
         self.__get_child(name)
         self.__get_text()
         return self.current_nodes
+
+    def pretreatment(self, key):
+        return common.format(key, self.keywords)
 
     def __get_child(self, key):
         self.__all_do(lambda element: element.findall(key))

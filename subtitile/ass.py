@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import logging
 
-logger = logging.getLogger('ab')
+logger = logging.getLogger(__name__)
 
 
 class Ass:

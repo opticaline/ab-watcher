@@ -7,7 +7,7 @@ from bs4 import BeautifulSoup
 from .danmu2ass import DanMuManager
 from utils import config, Requests
 
-logger = logging.getLogger('ab')
+logger = logging.getLogger(__name__)
 
 
 class Analysis:
@@ -24,7 +24,7 @@ class Analysis:
         temp = self.info['url'].replace('http://', '').split('/')[0].split('.')
         self.site = temp[len(temp) - 2]
         self.config = config
-        self.save_path = self.config.get_property('platform.nt.subtitle-savepath')
+        self.save_path = self.config.get_property('{platform}.subtitle-savepath')
 
     def get_video(self):
         url = self.info['url'].replace('http://', 'http:##')

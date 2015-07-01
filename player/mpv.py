@@ -3,7 +3,7 @@ import logging
 from subprocess import Popen
 from .player import BasePlayer
 
-logger = logging.getLogger('ab')
+logger = logging.getLogger(__name__)
 
 
 class Mpv(BasePlayer):

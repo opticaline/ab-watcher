@@ -1,15 +1,13 @@
 <?xml version='1.0' encoding='utf-8' ?>
 <settings>
-    <platform>
-        <nt>
-            <player-cmd>D:\mpv\mpv.exe</player-cmd>
-            <subtitle-savepath>D:\subtitles\</subtitle-savepath>
-        </nt>
-        <unix>
-            <player-cmd>mpv</player-cmd>
-            <subtitle-savepath>~/.temp/subtitles/</subtitle-savepath>
-        </unix>
-    </platform>
+    <win32>
+        <player-cmd>D:\mpv\mpv.exe</player-cmd>
+        <subtitle-savepath>D:\subtitles\</subtitle-savepath>
+    </win32>
+    <unix>
+        <player-cmd>mpv</player-cmd>
+        <subtitle-savepath>~/.temp/subtitles/</subtitle-savepath>
+    </unix>
     <default-args>-b</default-args>
     <http-proxy>http://zhang-xu-neu:Bronze3!@192.168.107.27:8080</http-proxy>
 </settings>
