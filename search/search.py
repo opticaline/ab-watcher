@@ -49,7 +49,7 @@ class AcFunSearch(Search):
                 'covers': d['titleImg'],
                 'url': d['url'] or 'http://www.acfun.tv/' +
                                    ('aa' if d['contentId'].startswith('aa') else 'v') + '/' + d['contentId'],
-                'title': d['title'],
+                'title': d['title'].encode('gbk'),
                 'description': d['description'],
                 'views': d['views'],
                 'username': d['username']
