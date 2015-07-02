@@ -1,12 +1,12 @@
 {
-  "examples" : [
-    "ab hello world",
-    "ab good morning"
-  ],
   "categories" : [
     "Utilities"
   ],
-  "displayName" : "Say Something (with settings)",
+  "displayName" : "Say Something",
   "name" : "ab",
-  "description" : "An example plugin with an options file."
+  "description" : "This is an example plugin",
+  "examples" : [
+    "ab hello world",
+    "ab good morning"
+  ]
 }
