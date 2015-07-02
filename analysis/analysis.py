@@ -69,10 +69,10 @@ class Analysis:
     def get_ass_path(self):
         ass_text = self.get_ass()
         if ass_text is not None:
-            path = '{0}/{1}-{2}.ass' \
-                .format(self.save_path, self.info['title'], int(time.time())) \
+            path = '{0}{1}-{2}.ass' \
+                .format(self.save_path, 'temp', int(time.time())) \
                 .replace(' ', '')
-            file = open(path, mode='w')
+            file = open(path, 'w')
             file.write(ass_text)
             file.close()
             return path

@@ -1,12 +1,14 @@
+from utils import main
+
 def results(fields, original_query):
-  message = fields['~message']
-  return {
-    "title": "Say '{0}'".format(message),
-    "run_args": [message],
-	"html": "<h1 style='font-family: sans-serif; padding: 2em'>{0}</h1>".format(message)
-  }
+    message = fields['~message']
+    out = main.video_list([message])
+    return {
+        "title": "Say '{0}'".format(message),
+        "run_args": [out[0]],
+        "html": "{0}".format(out)
+    }
+
 
 def run(message):
-  import os, pipes
-  os.system('say "{0}"b'.format(pipes.quote(message.encode('utf8'))))
-
+    main.play_video(message)

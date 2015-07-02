@@ -5,8 +5,8 @@
         <subtitle-savepath>D:\subtitles\</subtitle-savepath>
     </win32>
     <darwin>
-        <player-cmd>mpv</player-cmd>
-        <subtitle-savepath>~/.temp/subtitles/</subtitle-savepath>
+        <player-cmd>/usr/local/bin/mpv</player-cmd>
+        <subtitle-savepath>/Users/Xu/.temp/subtitles/</subtitle-savepath>
     </darwin>
     <default-args>-b</default-args>
     <!--<http-proxy>http://zhang-xu-neu:Bronze3!@192.168.107.27:8080</http-proxy>-->
