@@ -4,11 +4,11 @@
         <player-cmd>D:\mpv\mpv.exe</player-cmd>
         <subtitle-savepath>D:\subtitles\</subtitle-savepath>
     </win32>
-    <unix>
+    <darwin>
         <player-cmd>mpv</player-cmd>
         <subtitle-savepath>~/.temp/subtitles/</subtitle-savepath>
-    </unix>
+    </darwin>
     <default-args>-b</default-args>
-    <http-proxy>http://zhang-xu-neu:Bronze3!@192.168.107.27:8080</http-proxy>
+    <!--<http-proxy>http://zhang-xu-neu:Bronze3!@192.168.107.27:8080</http-proxy>-->
 </settings>
 
