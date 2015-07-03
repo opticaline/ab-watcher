@@ -24,7 +24,7 @@ class Analysis:
         temp = self.info['url'].replace('http://', '').split('/')[0].split('.')
         self.site = temp[len(temp) - 2]
         self.config = config
-        self.save_path = self.config.get_property('{platform}.subtitle-savepath')
+        self.save_path = self.config.get_property('{platform}.temp-path')
 
     def get_video(self):
         url = self.info['url'].replace('http://', 'http:##')

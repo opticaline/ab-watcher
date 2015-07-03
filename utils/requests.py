@@ -14,12 +14,18 @@ class Requests:
     method = None
     proxy = None
     encoding = None
+    useCache = False
+    cachePath = None
 
     def __init__(self, url, **kwargs):
         self.__dict__ = kwargs
         self.url = url
 
     def request(self):
+        if self.useCache:
+            cache = self.get_cache()
+            if cache is not None:
+                return cache
         if Requests.proxy is not None:
             opener = urllib2.build_opener(Requests.proxy)
             urllib2.install_opener(opener)
@@ -29,8 +35,32 @@ class Requests:
             temp = temp.split('charset=')
             if len(temp) == 2:
                 self.encoding = temp[1]
-        # print(self.encoding)
-        return request.read()
+        text = request.read()
+        if Requests.useCache:
+            self.set_cache(text)
+        print(self.encoding)
+        return text
+
+    def get_cache(self):
+        import os
+
+        text = None
+        path = self.get_cache_file()
+        if os.path.exists(path):
+            f = open(path, 'r')
+            text = f.read()
+            f.close()
+        return text
+
+    def set_cache(self, text):
+        f = open(self.get_cache_file(), 'w')
+        f.write(text)
+        f.close()
+
+    def get_cache_file(self):
+        import hashlib, time
+
+        return self.cachePath + hashlib.md5(self.url + time.strftime("%Y-%m-%d")).hexdigest()
 
     def get_json(self):
         try:
@@ -52,6 +82,11 @@ class Requests:
             p.setdefault('https', https)
         if len(p.keys()) > 0:
             Requests.proxy = urllib2.ProxyHandler(p)
+
+    @staticmethod
+    def use_cache(path):
+        Requests.useCache = True
+        Requests.cachePath = path
 
     @staticmethod
     def quote(s, safe='/'):

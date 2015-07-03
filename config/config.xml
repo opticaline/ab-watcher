@@ -2,12 +2,13 @@
 <settings>
     <win32>
         <player-cmd>D:\mpv\mpv.exe</player-cmd>
-        <subtitle-savepath>D:\subtitles\</subtitle-savepath>
+        <temp-path>D:\subtitles\</temp-path>
     </win32>
     <darwin>
         <player-cmd>/usr/local/bin/mpv</player-cmd>
-        <subtitle-savepath>/Users/Xu/.temp/subtitles/</subtitle-savepath>
+        <temp-path>/Users/Xu/.temp/</temp-path>
     </darwin>
+    <use-cache>True</use-cache>
     <default-args>-b</default-args>
     <http-proxy>http://zhang-xu-neu:Bronze3!@192.168.107.27:8080</http-proxy>
 </settings>
