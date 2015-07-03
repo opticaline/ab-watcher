@@ -13,27 +13,34 @@ class Requests:
     params = None
     method = None
     proxy = None
+    encoding = None
 
-    def __init__(self, **kwargs):
+    def __init__(self, url, **kwargs):
         self.__dict__ = kwargs
+        self.url = url
 
     def request(self):
         if Requests.proxy is not None:
             opener = urllib2.build_opener(Requests.proxy)
             urllib2.install_opener(opener)
-        return urllib2.urlopen(self.url).read()
+        request = urllib2.urlopen(self.url)
+        temp = request.info().get('Content-Type')
+        if temp is not None:
+            temp = temp.split('charset=')
+            if len(temp) == 2:
+                self.encoding = temp[1]
+        # print(self.encoding)
+        return request.read()
 
-    @staticmethod
-    def get_json(**kwargs):
+    def get_json(self):
         try:
-            return json.loads(Requests(**kwargs).request())
+            return json.loads(self.request())
         except ValueError, err:
-            logger.warning('{1}, on loading url: {0}'.format(kwargs['url'], err))
+            logger.warning('{1}, on loading url: {0}'.format(self.url, err))
             return None
 
-    @staticmethod
-    def get_soup(**kwargs):
-        html = Requests(**kwargs).request()
+    def get_soup(self):
+        html = self.request()
         return BeautifulSoup(html)
 
     @staticmethod
