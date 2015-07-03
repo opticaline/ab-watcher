@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from utils import Requests
 
 
 def run():
@@ -11,14 +10,17 @@ def run():
     #
     # print(common.format('12{he[keyword]llo}34\{pass\}56{keyword}7890', {'keyword': ' wow '}))
 
-    # from utils import main
+    from utils import main
 
-    # infos = main.video_list(['qyqx'])
-    # main.play_video(infos[1])
+    infos = main.video_list(['qyqx'])
+    print(infos[0]['description'])
+    print(infos[0]['username'])
+    print(infos[0]['title'])
+    main.play_video(infos[1])
 
     # html = Requests('http://search.acfun.tv/search?cd=1&type=2&q=%E7%96%AF%E7%8B%82%E7%9A%84&sortType=-1&field=title&sortField=score&pageNo=1&pageSize=10&aiCount=3&spCount=3&isWeb=1&sys_name=pc').request()
-    html = Requests('http://static.comment.acfun.mm111.net/2266943-0').request()
-    print(html)
+    # html = Requests('http://static.comment.acfun.mm111.net/2266943-0').request()
+    # print(html)
 
 if __name__ == '__main__':
     run()

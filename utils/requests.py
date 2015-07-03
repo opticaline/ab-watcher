@@ -60,7 +60,7 @@ class Requests:
     def get_cache_file(self):
         import hashlib, time
 
-        return self.cachePath + hashlib.md5(self.url + time.strftime("%Y-%m-%d")).hexdigest()
+        return self.cachePath + hashlib.md5(self.url).hexdigest() + time.strftime("-%Y-%m-%d")
 
     def get_json(self):
         try:
