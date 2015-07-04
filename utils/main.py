@@ -45,14 +45,17 @@ def play_video(info):
 
 
 def flashlight_plugin_result(message):
-    out = video_list(message.split(' '))
+    out, index = video_list(message.split(' '))
+    l = out
     if out is None:
         return None
 
+    if index != 0:
+        l = [out[index]]
     return {
-        "title": "{0}".format(out[0]['title'].encode('utf-8')),
-        "run_args": [out[0]],
-        "html": '{0}'.format(list_template(out))
+        "title": "{0}".format(out[index]['title'].encode('utf-8')),
+        "run_args": [out[index]],
+        "html": '{0}'.format(list_template(l))
     }
 
 def list_template(l):

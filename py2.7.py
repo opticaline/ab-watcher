@@ -13,6 +13,9 @@ def run():
     from utils import main
 
     infos = main.flashlight_plugin_result('恩率')
+    # infos = main.flashlight_plugin_result('movie 恩率')
+    # infos = main.flashlight_plugin_result('movie 恩率 ,')
+    infos = main.flashlight_plugin_result('movie 恩率 ,3')
     print(infos)
 
     # html = Requests('http://search.acfun.tv/search?cd=1&type=2&q=%E7%96%AF%E7%8B%82%E7%9A%84&sortType=-1&field=title&sortField=score&pageNo=1&pageSize=10&aiCount=3&spCount=3&isWeb=1&sys_name=pc').request()

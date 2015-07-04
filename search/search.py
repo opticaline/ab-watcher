@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import json
-from utils import Requests
-import re
+from utils import Requests, common
 
 
 class Search:
@@ -10,7 +9,7 @@ class Search:
     def __init__(self, source):
         self.source = source
 
-    def search(self, t, keyword):
+    def search(self, scope, style, search_word, page_num):
         pass
         # covers, url, title, description, views, username
 
@@ -20,26 +19,19 @@ class Search:
 
 
 class AcFunSearch(Search):
-    def search(self, t, keyword):
+    def search(self, scope, style, search_word, page_num):
         result = []
-        for url in self.source[t]:
-            url = self.set_params(url, keyword)
-            if t == 'search':
+        for url in self.source[scope]:
+            url = common.format(url, {
+                'keyword': Requests.quote(search_word),
+                'page_num': str(page_num)
+            })
+            if scope == 'all':
                 # TODO 增加对不同类型scope的搜索解析
                 result += self.translation(json.loads(self.get(url).replace('system.tv=', ''))['data']['page']['list'])
             else:
                 result += self.translation(json.loads(self.get(url)))
         return result
-
-    @staticmethod
-    def set_params(url, keyword=None):
-        if not keyword:
-            keyword = {}
-
-        def repl(matched):
-            return Requests.quote(keyword.get(matched.group("key"), ''))
-
-        return re.sub('\{(?P<key>\w+)\}', repl, url)
 
     @staticmethod
     def translation(data):
