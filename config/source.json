@@ -1,11 +1,13 @@
 {
   "AcFun": {
+    "lol": [
+      "http://search.acfun.tv/search?cd=1&type=2&q={keyword}&channelId=85&sortType=-1&field=description&parentChannelId=59&sortField=score&pageNo={page_num}&pageSize=10&aiCount=3&spCount=3&isWeb=1&sys_name=pc"
+    ],
     "movie": [
-      "http://www.acfun.tv/rank.aspx?channelId=96&range=1&count=30&ext=1&date=",
-      "http://www.acfun.tv/rank.aspx?channelId=96&range=2&count=30&ext=1&date="
+      "http://search.acfun.tv/search?cd=1&type=2&q={keyword}&channelId=96&sortType=-1&field=description&parentChannelId=68&sortField=score&pageNo={page_num}&pageSize=10&aiCount=3&spCount=3&isWeb=1&sys_name=pc"
     ],
     "all": [
-      "http://search.acfun.tv/search?cd=1&type=2&q={keyword}&sortType=-1&field=title&sortField=score&pageNo={page_num}&pageSize=10&aiCount=3&spCount=3&isWeb=1&sys_name=pc"
+      "http://search.acfun.tv/search?cd=1&type=2&q={keyword}&sortType=-1&field=description&sortField=score&pageNo={page_num}&pageSize=10&aiCount=3&spCount=3&isWeb=1&sys_name=pc"
     ]
   }
 }

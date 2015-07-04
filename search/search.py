@@ -26,11 +26,7 @@ class AcFunSearch(Search):
                 'keyword': Requests.quote(search_word),
                 'page_num': str(page_num)
             })
-            if scope == 'all':
-                # TODO 增加对不同类型scope的搜索解析
-                result += self.translation(json.loads(self.get(url).replace('system.tv=', ''))['data']['page']['list'])
-            else:
-                result += self.translation(json.loads(self.get(url)))
+            result += self.translation(json.loads(self.get(url).replace('system.tv=', ''))['data']['page']['list'])
         return result
 
     @staticmethod
