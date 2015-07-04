@@ -12,11 +12,9 @@ def run():
 
     from utils import main
 
-    infos = main.video_list(['qyqx'])
-    print(infos[0]['description'])
-    print(infos[0]['username'])
-    print(infos[0]['title'])
-    main.play_video(infos[1])
+    infos = main.video_list(['恩率'])
+    print(infos[0])
+    print(type(u'恩率'))
 
     # html = Requests('http://search.acfun.tv/search?cd=1&type=2&q=%E7%96%AF%E7%8B%82%E7%9A%84&sortType=-1&field=title&sortField=score&pageNo=1&pageSize=10&aiCount=3&spCount=3&isWeb=1&sys_name=pc').request()
     # html = Requests('http://static.comment.acfun.mm111.net/2266943-0').request()

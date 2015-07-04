@@ -7,18 +7,24 @@ logging.config.fileConfig("config/logger.conf")
 
 
 def results(fields, original_query):
-    message = fields['~message']
+    message = fields['~message'].encode('utf8')
     out = main.video_list([message])
+    if out is None:
+        return None
     html = ''
     index = 1
-    template = '''<div>
-    <div style="display:inline-block"><img style="width: 140px;" src="{1}"></div>
-    <div style="display:inline-block;padding: 10px;width: 200px;">
-        <i style="color: red; border-radius: 50%; background-color: black;width: 20px;display: inline-block;">
-        {5}
-        </i>{0} / {2} / 播放({4})
+    template = '''<div style="border: 1px solid black; padding: 3px;margin-bottom: 1px;">
+    <b style="display: block;">
+        <i style="color: red; border-radius: 50%; background-color: black;padding: 0 5px;">
+            {5}
+        </i>
+        {2}
+    </b>
+    <div style="display:table;clear:both;font-size:12px">
+        <img style="width: 140px;height: 80px;float:left;margin-right:5px;" src="{1}">
+        <span style="color: lightseagreen">
+        {0}</span> ／ 播放:{4}<br>{3}
     </div>
-    <div>{3}</div>
 </div>'''
     for i in out:
         html += template.format(
@@ -30,7 +36,7 @@ def results(fields, original_query):
             index)
         index += 1
     return {
-        "title": "Say '{0}'".format(message),
+        "title": "{0}".format(out[0]['title'].encode('utf-8')),
         "run_args": [out[0]],
         "html": '{0}'.format(html)
     }
