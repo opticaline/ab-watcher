@@ -2,6 +2,7 @@
 import os
 from .requests import Requests
 from .config import Configuration
+from .history import History
 
 config = Configuration(__path__[0] + '{0}..{0}config'.format(os.path.sep))
 
@@ -11,5 +12,7 @@ if http is not None:
 useCache = config.get_property('use-cache')
 if useCache is not None and useCache == 'True':
     Requests.use_cache(config.get_property('{platform}.temp-path'))
+history = History(config.get_property('{platform}.temp-path') + '.history')
+
 
 __all__ = ['config']

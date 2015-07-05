@@ -22,6 +22,7 @@ class ArgsParser:
             for t in source[site]:
                 self.all_type.add(t)
         self.all_type.add(DefaultArgs.get('HELP'))
+        self.all_type.add(DefaultArgs.get('HISTORY'))
 
         if re.match('^,*\d*$', args[-1]):
             length = len(args[-1])
@@ -73,7 +74,9 @@ class SearchManager:
         if scope == DefaultArgs.get('HELP'):
             return []
         elif scope == DefaultArgs.get('HISTORY'):
-            return []
+            from utils import history
+
+            return history.get_all(), index
         else:
             return self.get_data(scope, style, searchword, page_num), index
 

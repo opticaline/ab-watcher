@@ -6,6 +6,7 @@ from optparse import OptionParser
 from analysis.analysis import Analysis
 from player import Player
 from utils import config
+from utils import history
 
 
 def make_args(args):
@@ -36,6 +37,7 @@ def video_list(args=None):
 
 
 def play_video(info):
+    history.add(info)
     analysis = Analysis(info=info)
     video = analysis.get_video()
     logger = logging.getLogger(__name__)
