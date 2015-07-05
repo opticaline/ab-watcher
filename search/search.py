@@ -13,10 +13,6 @@ class Search:
         pass
         # covers, url, title, description, views, username
 
-    @staticmethod
-    def get(url):
-        return Requests(url=url).request()
-
 
 class AcFunSearch(Search):
     def search(self, scope, style, search_word, page_num):
@@ -26,7 +22,8 @@ class AcFunSearch(Search):
                 'keyword': Requests.quote(search_word),
                 'page_num': str(page_num)
             })
-            result += self.translation(json.loads(self.get(url).replace('system.tv=', ''))['data']['page']['list'])
+            result += self.translation(
+                json.loads(Requests(url=url).request().replace('system.tv=', ''))['data']['page']['list'])
         return result
 
     @staticmethod
@@ -46,4 +43,27 @@ class AcFunSearch(Search):
 
 
 class BiliBiliSearch(Search):
-    pass
+    def search(self, scope, style, search_word, page_num):
+        params = {'keyword': Requests.quote(search_word),
+                  'page_num': str(page_num)}.copy()
+        params.update(self.source['scope'][scope])
+
+        url = common.format(self.source['urls'][style], params)
+        soup = Requests(url).get_soup()
+        return self.__search_page(soup)
+
+    @staticmethod
+    def __search_page(soup):
+        result = []
+        for i in soup.select('.l.sp-guid'):
+            temp = {}
+            temp.setdefault('covers', i.find_all('img')[0]['src'])
+            temp.setdefault('url', i.select('div.r_sp a')[0]['href'])
+            title = i.select('div.r_sp a')[0]
+            title.select('.t span')[0].clear()
+            temp.setdefault('title', title.text.strip())
+            temp.setdefault('description', i.select('.intro')[0].text)
+            temp.setdefault('views', i.select('.w_info .gk')[0].text)
+            temp.setdefault('username', i.select('.w_info .up a')[0].text)
+            result.append(temp)
+        return result

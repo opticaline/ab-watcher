@@ -26,9 +26,28 @@ class Analysis:
         self.config = config
         self.save_path = self.config.get_property('{platform}.temp-path')
 
+    @staticmethod
+    def __utf16to8(url):
+        out = ''
+        for c in url:
+            c = ord(c)
+            if c == (0x60 + 0xF):
+                out += chr(0xC0 | ((((0x3B << 4) + 0xF) >> 6) & 0x1F))
+                out += chr(0x80 | ((((0x3B << 4) + 0xF) >> 0) & 0x3F))
+            elif (c >= 0x0001) and (c <= 0x007F):
+                out += chr(c)
+            elif c > 0x07FF:
+                out += chr(0xE0 | ((c >> 12) & 0x0F))
+                out += chr(0x80 | ((c >> 6) & 0x3F))
+                out += chr(0x80 | ((c >> 0) & 0x3F))
+            else:
+                out += chr(0xC0 | ((c >> 6) & 0x1F))
+                out += chr(0x80 | ((c >> 0) & 0x3F))
+        return out
+
     def get_video(self):
         url = self.info['url'].replace('http://', 'http:##')
-        url = base64.b64encode(url.encode()).decode()
+        url = base64.b64encode(self.__utf16to8(url))
         temp = Requests(url=self.api + url).request().decode('utf8')
         html = temp[157:-74]
         soup = BeautifulSoup(html)

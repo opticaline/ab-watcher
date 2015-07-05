@@ -9,5 +9,17 @@
     "all": [
       "http://search.acfun.tv/search?cd=1&type=2&q={keyword}&sortType=-1&field=description&sortField=score&pageNo={page_num}&pageSize=10&aiCount=3&spCount=3&isWeb=1&sys_name=pc"
     ]
+  },
+  "BiliBili": {
+    "urls": {
+      "hot":"",
+      "search": "http://www.bilibili.com/search_v2?keyword={keyword}&type=&orderby=&tids=&tidsC=&arctype=all&page={page_num}&seid=6653093371069633599"
+    },
+    "scope": {
+      "all": {
+      },
+      "movie": {
+      }
+    }
   }
 }

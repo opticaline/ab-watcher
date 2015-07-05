@@ -29,16 +29,24 @@ class Requests:
         if Requests.proxy is not None:
             opener = urllib2.build_opener(Requests.proxy)
             urllib2.install_opener(opener)
-        request = urllib2.urlopen(self.url)
-        temp = request.info().get('Content-Type')
+        response = urllib2.urlopen(self.url)
+        temp = response.info().get('Content-Type')
         if temp is not None:
             temp = temp.split('charset=')
             if len(temp) == 2:
                 self.encoding = temp[1]
-        text = request.read()
+
+        if response.info().get('Content-Encoding') == 'gzip':
+            from StringIO import StringIO
+            import gzip
+
+            buf = StringIO(response.read())
+            f = gzip.GzipFile(fileobj=buf)
+            text = f.read()
+        else:
+            text = response.read()
         if Requests.useCache:
             self.set_cache(text)
-        print(self.encoding)
         return text
 
     def get_cache(self):

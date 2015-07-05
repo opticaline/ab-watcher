@@ -21,7 +21,7 @@ class Configuration:
 
     def __init_keywords(self):
         self.keywords.setdefault('platform', sys.platform)
-        logger.info('config keywords {0}'.format(self.keywords))
+        # logger.debug('config keywords {0}'.format(self.keywords))
 
     def load(self, file_path):
         if os.path.exists(file_path):

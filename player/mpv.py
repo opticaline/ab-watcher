@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 
 class Mpv(BasePlayer):
     mpv = None
-    volume = 20
+    volume = 5
 
     def __init__(self, mpv_path='D:/mpv/mpv.exe'):
         BasePlayer.__init__(self)

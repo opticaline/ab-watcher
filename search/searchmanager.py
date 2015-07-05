@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import json
 import re
-from .search import AcFunSearch
+from .search import AcFunSearch, BiliBiliSearch
 
 DefaultArgs = {
     'ALL': 'all',
@@ -66,7 +66,7 @@ class SearchManager:
         if self.options.GetAcFun:
             self.searcher.append(AcFunSearch(self.source['AcFun']))
         if self.options.GetBilibili:
-            self.searcher.append(AcFunSearch(self.source['BiliBili']))
+            self.searcher.append(BiliBiliSearch(self.source['BiliBili']))
 
     def search(self, args):
         scope, style, searchword, page_num, index = ArgsParser(args, self.source).parser()
