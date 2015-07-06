@@ -1,10 +1,13 @@
 # -*- coding: utf-8 -*-
+import json
 import logging
-
 import sys
 from optparse import OptionParser
+
 from analysis.analysis import Analysis
 from player import Player
+from search import SearchManager
+from search.searchmanager import ArgsParser
 from utils import config
 from utils import history
 
@@ -29,10 +32,10 @@ def video_list(args=None):
     (options, args) = make_args(args)
 
     if len(args) > 0:
-        from search import SearchManager
-
-        manager = SearchManager(options)
-        return manager.search(args)
+        source = json.loads(open(options.Source).read())
+        kwargs = ArgsParser(args, source).parser()
+        manager = SearchManager(options, source)
+        return manager.search(kwargs), kwargs.index
     return []
 
 

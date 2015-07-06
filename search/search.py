@@ -9,18 +9,18 @@ class Search:
     def __init__(self, source):
         self.source = source
 
-    def search(self, scope, style, search_word, page_num):
+    def search(self, kwargs):
         pass
         # covers, url, title, description, views, username
 
 
 class AcFunSearch(Search):
-    def search(self, scope, style, search_word, page_num):
+    def search(self, kwargs):
         result = []
-        for url in self.source[scope]:
+        for url in self.source[kwargs.scope]:
             url = common.format(url, {
-                'keyword': Requests.quote(search_word),
-                'page_num': str(page_num)
+                'keyword': Requests.quote(kwargs.search_word),
+                'page_num': str(kwargs.page_num)
             })
             result += self.translation(
                 json.loads(Requests(url=url).request().replace('system.tv=', ''))['data']['page']['list'])
@@ -43,12 +43,12 @@ class AcFunSearch(Search):
 
 
 class BiliBiliSearch(Search):
-    def search(self, scope, style, search_word, page_num):
-        params = {'keyword': Requests.quote(search_word),
-                  'page_num': str(page_num)}.copy()
-        params.update(self.source['scope'][scope])
+    def search(self, kwargs):
+        params = {'keyword': Requests.quote(kwargs.search_word),
+                  'page_num': str(kwargs.page_num)}.copy()
+        params.update(self.source['scope'][kwargs.scope])
 
-        url = common.format(self.source['urls'][style], params)
+        url = common.format(self.source['urls'][kwargs.style], params)
         soup = Requests(url).get_soup()
         return self.__search_page(soup)
 

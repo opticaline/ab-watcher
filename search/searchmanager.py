@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
-import json
+
 import re
 from .search import AcFunSearch, BiliBiliSearch
+from utils.common import DictUtils
 
 DefaultArgs = {
     'ALL': 'all',
@@ -34,7 +35,7 @@ class ArgsParser:
         self.args = args
 
     def parser(self):
-        scope, style, searchword = None, None, None
+        scope, style, search_word = None, None, None
         length = len(self.args)
         if length == 0:
             scope = DefaultArgs.get('HISTORY')
@@ -46,12 +47,18 @@ class ArgsParser:
             else:
                 scope = DefaultArgs.get('ALL')
                 style = DefaultArgs.get('SEARCH')
-                searchword = self.args[0]
+                search_word = self.args[0]
         else:
             scope = self.args[0]
             style = DefaultArgs.get('SEARCH')
-            searchword = ' '.join(self.args[1:])
-        return scope, style, searchword, self.page_num, self.index
+            search_word = ' '.join(self.args[1:])
+        return DictUtils({
+            'scope': scope,
+            'style': style,
+            'search_word': search_word,
+            'page_num': self.page_num,
+            'index': self.index
+        })
 
 
 class SearchManager:
@@ -59,29 +66,28 @@ class SearchManager:
     source = None
     searcher = []
 
-    def __init__(self, options=None):
+    def __init__(self, options=None, source=None):
         if not options:
             options = {}
         self.options = options
-        self.source = json.loads(open(self.options.Source).read())
+        self.source = source
         if self.options.GetAcFun:
             self.searcher.append(AcFunSearch(self.source['AcFun']))
         if self.options.GetBilibili:
             self.searcher.append(BiliBiliSearch(self.source['BiliBili']))
 
-    def search(self, args):
-        scope, style, searchword, page_num, index = ArgsParser(args, self.source).parser()
-        if scope == DefaultArgs.get('HELP'):
+    def search(self, kwargs):
+        if kwargs.scope == DefaultArgs.get('HELP'):
             return []
-        elif scope == DefaultArgs.get('HISTORY'):
+        elif kwargs.scope == DefaultArgs.get('HISTORY'):
             from utils import history
 
-            return history.get_all(), index
+            return history.get_all()
         else:
-            return self.get_data(scope, style, searchword, page_num), index
+            return self.get_data(kwargs)
 
-    def get_data(self, scope, style, searchword, page_num):
+    def get_data(self, kwargs):
         data = []
         for searcher in self.searcher:
-            data += searcher.search(scope, style, searchword, page_num)
+            data += searcher.search(kwargs)
         return data

@@ -20,7 +20,7 @@ class Analysis:
 
     def __init__(self, **kwargs):
         self.__dict__ = kwargs
-        logger.info('Analysis ' + kwargs['info']['url'])
+        logger.info('Open ' + kwargs['info']['url'])
         temp = self.info['url'].replace('http://', '').split('/')[0].split('.')
         self.site = temp[len(temp) - 2]
         self.config = config

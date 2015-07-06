@@ -27,3 +27,11 @@ class StringUtil:
                 return params.get(match.groups()[0])
 
         return re.sub('(?<!\\\\){(.+?[^\\\\])}', repl, self.string)
+
+
+class DictUtils:
+    def __init__(self, dic):
+        self.__dict = dic
+
+    def __getattr__(self, item):
+        return self.__dict.get(item, None)
