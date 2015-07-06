@@ -51,6 +51,9 @@ def play_video(info):
 
 def flashlight_plugin_result(message):
     out, index = video_list(message.split(' '))
+    import json
+
+    print(json.dumps(out))
     l = out
     if out is None or len(out) == 0:
         return None
@@ -60,8 +63,17 @@ def flashlight_plugin_result(message):
     return {
         "title": "{0}".format(out[index]['title'].encode('utf-8')),
         "run_args": [out[index]],
-        "html": '{0}'.format(list_template(l))
+        "html": '{0}'.format(make_template(l))
     }
+
+
+def make_template(data):
+    if len(data) == 1:
+        # TODO 当只有一个匹配时显示布局发生变化
+        return list_template(data)
+    else:
+        return list_template(data)
+
 
 def list_template(l):
     html = ''
@@ -74,7 +86,8 @@ def list_template(l):
         {2}
     </b>
     <div style="display:table;clear:both;font-size:12px">
-        <img style="width: 140px;height: 80px;float:left;margin-right:5px;" src="{1}">
+        <img style="width: 140px;height: 80px;float:left;margin-right:5px;position: relative;" src="{1}">
+        <img style="position: absolute;margin-left: -84px;top: 0px;height: 25px;width: 84px;" src="http://static.hdslb.com/images/header/bilibili6th_logo.png" >
         <span style="color: lightseagreen">
         {0}</span> ／ 播放:{4}<br>{3}
     </div>

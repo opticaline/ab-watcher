@@ -9,7 +9,6 @@
         <temp-path>/Users/Xu/.temp/</temp-path>
     </darwin>
     <use-cache>True</use-cache>
-    <default-args>-a</default-args>
     <http-proxy>http://zhang-xu-neu:Bronze3!@192.168.107.27:8080</http-proxy>
 </settings>
 

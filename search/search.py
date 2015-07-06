@@ -63,7 +63,10 @@ class BiliBiliSearch(Search):
             title.select('.t span')[0].clear()
             temp.setdefault('title', title.text.strip())
             temp.setdefault('description', i.select('.intro')[0].text)
-            temp.setdefault('views', i.select('.w_info .gk')[0].text)
+            import re
+
+            views = re.sub('[^\d]+', '', i.select('.w_info .gk')[0].text)
+            temp.setdefault('views', int(views) if views != '' else 0)
             temp.setdefault('username', i.select('.w_info .up a')[0].text)
             result.append(temp)
         return result

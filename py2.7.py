@@ -10,7 +10,7 @@ def run():
 
     result = main.flashlight_plugin_result('恩率')
     main.play_video(result.get('run_args')[0])
-    print(result)
+
 
 if __name__ == '__main__':
     run()

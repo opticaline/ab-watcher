@@ -77,14 +77,16 @@ class SearchManager:
             self.searcher.append(BiliBiliSearch(self.source['BiliBili']))
 
     def search(self, kwargs):
+        result = None
         if kwargs.scope == DefaultArgs.get('HELP'):
-            return []
+            result = []
         elif kwargs.scope == DefaultArgs.get('HISTORY'):
             from utils import history
 
-            return history.get_all()
+            result = history.get_all()
         else:
-            return self.get_data(kwargs)
+            result = self.get_data(kwargs)
+        return sorted(result, lambda o1, o2: o2.get('views') - o1.get('views'))
 
     def get_data(self, kwargs):
         data = []
