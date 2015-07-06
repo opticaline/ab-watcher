@@ -7,7 +7,6 @@ logger = logging.getLogger(__name__)
 
 
 class Mpv(BasePlayer):
-    mpv = None
     volume = 5
 
     def __init__(self, mpv_path='D:/mpv/mpv.exe'):
@@ -25,4 +24,4 @@ class Mpv(BasePlayer):
         # if title is not None:
             # cmd.extend(['--title', title])
         logger.debug('Command run: {0}'.format(' '.join(cmd)))
-        self.mpv = Popen(cmd)
+        self.run(cmd)

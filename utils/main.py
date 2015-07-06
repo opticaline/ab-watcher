@@ -49,7 +49,7 @@ def play_video(info):
 def flashlight_plugin_result(message):
     out, index = video_list(message.split(' '))
     l = out
-    if out is None:
+    if out is None or len(out) == 0:
         return None
 
     if index != 0:
