@@ -77,7 +77,6 @@ class SearchManager:
             self.searcher.append(BiliBiliSearch(self.source['BiliBili']))
 
     def search(self, kwargs):
-        result = None
         if kwargs.scope == DefaultArgs.get('HELP'):
             result = []
         elif kwargs.scope == DefaultArgs.get('HISTORY'):

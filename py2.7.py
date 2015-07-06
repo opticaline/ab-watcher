@@ -8,7 +8,7 @@ def run():
 
     from utils import main
 
-    result = main.flashlight_plugin_result('恩率')
+    result = main.flashlight_plugin_result('history')
     main.play_video(result.get('run_args')[0])
 
 

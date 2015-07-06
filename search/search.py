@@ -4,6 +4,7 @@ from utils import Requests, common
 
 
 class Search:
+    logo = None
     source = []
 
     def __init__(self, source):
@@ -15,6 +16,8 @@ class Search:
 
 
 class AcFunSearch(Search):
+    logo = 'http://static.acfun.mm111.net/dotnet/20130418/project/sanae/style/image/logo-new.png'
+
     def search(self, kwargs):
         result = []
         for url in self.source[kwargs.scope]:
@@ -37,12 +40,15 @@ class AcFunSearch(Search):
                 'title': d['title'],
                 'description': d['description'],
                 'views': d['views'],
-                'username': d['username']
+                'username': d['username'],
+                'logo': AcFunSearch.logo
             })
         return result
 
 
 class BiliBiliSearch(Search):
+    logo = 'http://static.hdslb.com/images/member_v2/logo.png'
+
     def search(self, kwargs):
         params = {'keyword': Requests.quote(kwargs.search_word),
                   'page_num': str(kwargs.page_num)}.copy()
@@ -68,5 +74,6 @@ class BiliBiliSearch(Search):
             views = re.sub('[^\d]+', '', i.select('.w_info .gk')[0].text)
             temp.setdefault('views', int(views) if views != '' else 0)
             temp.setdefault('username', i.select('.w_info .up a')[0].text)
+            temp.setdefault('logo', BiliBiliSearch.logo)
             result.append(temp)
         return result

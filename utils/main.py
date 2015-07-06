@@ -51,9 +51,6 @@ def play_video(info):
 
 def flashlight_plugin_result(message):
     out, index = video_list(message.split(' '))
-    import json
-
-    print(json.dumps(out))
     l = out
     if out is None or len(out) == 0:
         return None
@@ -76,22 +73,13 @@ def make_template(data):
 
 
 def list_template(l):
-    html = ''
+    f = open('resources/style.html', 'r')
+    html = f.read()
+    f.close()
     index = 1
-    template = '''<div style="border: 1px solid black; padding: 3px;margin-bottom: 1px;">
-    <b style="display: block;">
-        <i style="color: red; border-radius: 50%; background-color: black;padding: 0 5px;">
-            {5}
-        </i>
-        {2}
-    </b>
-    <div style="display:table;clear:both;font-size:12px">
-        <img style="width: 140px;height: 80px;float:left;margin-right:5px;position: relative;" src="{1}">
-        <img style="position: absolute;margin-left: -84px;top: 0px;height: 25px;width: 84px;" src="http://static.hdslb.com/images/header/bilibili6th_logo.png" >
-        <span style="color: lightseagreen">
-        {0}</span> ／ 播放:{4}<br>{3}
-    </div>
-</div>'''
+    f = open('resources/list.html', 'r')
+    template = f.read()
+    f.close()
     for i in l:
         html += template.format(
             i['username'].encode('utf-8'),
@@ -99,6 +87,7 @@ def list_template(l):
             i['title'].encode('utf-8'),
             i['description'].encode('utf-8'),
             i['views'],
-            index)
+            index,
+            i['logo'])
         index += 1
     return html
